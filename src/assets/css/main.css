@@ -15,4 +15,8 @@
   header ul::after {
     @apply bg-emerald-600 w-activeLinkWidth h-1 rounded-lg absolute -bottom-2.5 translate-x-activeLinkLocation transition-all content-[''];
   }
+
+  aside ul a.router-link-active.router-link-exact-active {
+    @apply text-emerald-600;
+  }
 }
