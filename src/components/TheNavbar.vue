@@ -44,32 +44,38 @@
     :class="sidebarVisibility ? `translate-x-0` : `-translate-x-full`"
     class="bg-gray-900/50 fixed inset-0 z-50 transition-transform lg:hidden"
   >
-    <nav class="bg-gray-100 text-gray-700 w-2/3 max-w-sm h-full p-4 flex flex-col gap-8">
+    <nav class="bg-gray-100 text-gray-700 w-2/3 max-w-sm h-full p-4 flex flex-col">
       <IconedButton @click="setSidebarVisibility()" class="self-end">
         <CloseIcon />
       </IconedButton>
 
       <div class="grid place-items-center gap-4">
-        <img
-          src="https://scontent.fmnl9-4.fna.fbcdn.net/v/t39.30808-6/357203077_2509728879194098_204956894696360182_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=5f2048&_nc_ohc=F8Gv3oYxZIMAX_HcFZ5&_nc_ht=scontent.fmnl9-4.fna&oh=00_AfBZOj6mHK3iyHo07xm033J7K83EjBXZlhVyfb8b-QMz3A&oe=652DDB09"
-          alt="Profile picture"
-          class="border-emerald-600 bg-gray-200 w-32 aspect-square border-4 rounded-full object-cover object-center"
-        />
-
-        <div class="flex-1 text-center grid">
-          <p class="font-medium uppercase truncate">Mon Albert L. Gamil</p>
-
-          <p class="text-sm truncate">mrgamilmonalbert@gmail.com</p>
+        <div class="relative">
+          <img
+            src="https://scontent.fmnl9-4.fna.fbcdn.net/v/t39.30808-6/357203077_2509728879194098_204956894696360182_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=5f2048&_nc_ohc=F8Gv3oYxZIMAX_HcFZ5&_nc_ht=scontent.fmnl9-4.fna&oh=00_AfBZOj6mHK3iyHo07xm033J7K83EjBXZlhVyfb8b-QMz3A&oe=652DDB09"
+            alt="Profile picture"
+            class="border-emerald-600 bg-gray-200 w-32 aspect-square border-4 rounded-full object-cover object-center"
+          />
 
           <p
-            class="border-gray-300 bg-gray-300 text-gray-900 w-max mx-auto mt-4 px-2 py-1 text-xs border rounded-full"
+            class="border-gray-100 bg-emerald-600 text-gray-100 w-8 aspect-square text-xs border-4 rounded-full grid place-items-center absolute left-2 bottom-0"
           >
-            Student
+            S
+          </p>
+        </div>
+
+        <div class="flex-1 text-center grid gap-1.5">
+          <p class="font-medium uppercase truncate">Mon Albert L. Gamil</p>
+
+          <p
+            class="border-gray-300 bg-gray-200 text-gray-800 px-2 py-1 text-xs truncate border rounded-full"
+          >
+            mrgamilmonalbert@gmail.com
           </p>
         </div>
       </div>
 
-      <ul class="grid">
+      <ul class="my-8 grid">
         <li v-for="(link, index) in links" :key="index">
           <RouterLink
             @click="setSidebarVisibility()"
