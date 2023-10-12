@@ -70,7 +70,7 @@ router.afterEach((to, from) => {
       name: links[link].innerText.toLowerCase(),
       width: from.name
         ? links[link].getBoundingClientRect().width
-        : links[link].getBoundingClientRect().width + additionalWidth
+        : links[link].getBoundingClientRect().width
     };
 
     linksList.push(details);
