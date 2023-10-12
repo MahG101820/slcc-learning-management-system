@@ -105,3 +105,10 @@ const sidebarVisibility = ref(false);
 
 const setSidebarVisibility = () => (sidebarVisibility.value = !sidebarVisibility.value);
 </script>
+
+<style lang="postcss" scoped>
+header ul a.router-link-active.router-link-exact-active,
+aside ul a.router-link-active.router-link-exact-active {
+  @apply text-emerald-600;
+}
+</style>
