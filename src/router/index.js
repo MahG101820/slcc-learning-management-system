@@ -63,14 +63,11 @@ router.afterEach((to, from) => {
 
   const links = document.querySelectorAll("header ul a");
   const linksList = [];
-  const additionalWidth = 5.1875;
 
   Object.keys(links).forEach((link) => {
     const details = {
       name: links[link].innerText.toLowerCase(),
-      width: from.name
-        ? links[link].getBoundingClientRect().width
-        : links[link].getBoundingClientRect().width
+      width: links[link].getBoundingClientRect().width
     };
 
     linksList.push(details);
