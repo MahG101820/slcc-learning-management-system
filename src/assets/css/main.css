@@ -8,6 +8,10 @@
     --activeLinkLocation: 0;
   }
 
+  body {
+    @apply bg-gray-100 text-gray-700;
+  }
+
   header ul a.router-link-active.router-link-exact-active {
     @apply text-emerald-600;
   }
