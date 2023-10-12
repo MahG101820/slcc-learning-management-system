@@ -11,8 +11,4 @@
   body {
     @apply bg-gray-100 text-gray-700;
   }
-
-  header ul::after {
-    @apply bg-emerald-600 w-activeLinkWidth h-1 rounded-lg absolute -bottom-2.5 translate-x-activeLinkLocation transition-all content-[''];
-  }
 }
