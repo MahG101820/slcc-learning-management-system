@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --activeLinkWidth: 0;
+    --activeLinkLocation: 0;
+  }
+
+  header ul a.router-link-active.router-link-exact-active {
+    @apply text-emerald-600;
+  }
+
+  header ul::after {
+    @apply bg-emerald-600 w-activeLinkWidth h-1 rounded-lg absolute -bottom-2.5 translate-x-activeLinkLocation transition-all content-[''];
+  }
+}
