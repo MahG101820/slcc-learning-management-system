@@ -58,7 +58,11 @@ const router = createRouter({
   ]
 });
 
-router.afterEach((to, from) => {
+router.beforeEach((to) => {
+  console.log(to.meta.requiresAuthentication);
+});
+
+router.afterEach((to) => {
   const activeLink = ref(0);
 
   const links = document.querySelectorAll("header ul a");
@@ -83,7 +87,7 @@ router.afterEach((to, from) => {
   const linksListSum = linksList
     .slice(0, activeLink.value)
     .map((link) => link.width)
-    .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    .reduce((previousValue, currentValue) => previousValue + currentValue, 0);
 
   document
     .querySelector(":root")
