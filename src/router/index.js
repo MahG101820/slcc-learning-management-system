@@ -54,12 +54,12 @@ const router = createRouter({
       name: "error",
       component: ErrorView,
       meta: { requiresAuthentication: false }
+    },
+    {
+      path: "/dashboard",
+      redirect: { name: "dashboard" }
     }
   ]
-});
-
-router.beforeEach((to) => {
-  console.log(to.meta.requiresAuthentication);
 });
 
 router.afterEach((to) => {

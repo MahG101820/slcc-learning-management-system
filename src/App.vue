@@ -1,13 +1,31 @@
 <template>
-  <TheNavbar />
+  <TheNavbar v-if="navbarVisibility" />
 
-  <main class="p-4 grid place-items-center">
-    <RouterView />
+  <main class="h-[calc(100vh-59.2px)] p-4">
+    <div class="w-full max-w-screen-xl h-full mx-auto overflow-x-auto">
+      <RouterView />
+    </div>
   </main>
 </template>
 
 <script setup>
-import { RouterView } from "vue-router";
+import { ref, watch } from "vue";
+import { RouterView, useRoute, useRouter } from "vue-router";
 
 import TheNavbar from "@/components/TheNavbar.vue";
+
+const route = useRoute();
+const router = useRouter();
+const navbarVisibility = ref(route.meta.requiresAuthentication);
+
+watch(
+  () => route.name,
+  (newRouteName, oldRouteName) => {
+    navbarVisibility.value = route.meta.requiresAuthentication;
+
+    if (!oldRouteName || (oldRouteName === "error" && newRouteName !== "error")) {
+      router.push({ name: newRouteName });
+    }
+  }
+);
 </script>
