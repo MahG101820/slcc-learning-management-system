@@ -1,8 +1,8 @@
 <template>
   <TheNavbar v-if="navbarVisibility" />
 
-  <main class="h-[calc(100vh-59.2px)] p-4">
-    <div class="w-full max-w-screen-xl h-full mx-auto overflow-x-auto">
+  <main class="h-[calc(100vh-59.2px)] p-4 grid place-items-center">
+    <div class="w-full max-w-screen-xl h-full overflow-x-auto">
       <RouterView />
     </div>
   </main>
