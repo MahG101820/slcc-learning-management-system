@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { ref } from "vue";
 
 import LoginView from "@/views/login/IndexView.vue";
 import ErrorView from "@/views/error/IndexView.vue";
@@ -17,6 +16,18 @@ const router = createRouter({
       path: "/materials",
       name: "materials",
       component: () => import("@/views/materials/IndexView.vue"),
+      meta: { requiresAuthentication: true }
+    },
+    {
+      path: "/materials/chapter/id=:id&number=:number&description=:description",
+      name: "materials-lessons",
+      component: () => import("@/views/materials/partials/LessonsView.vue"),
+      meta: { requiresAuthentication: true }
+    },
+    {
+      path: "/materials/lesson/id=:id&number=:number&description=:description",
+      name: "materials-lesson",
+      component: () => import("@/views/materials/partials/ReadLessonView.vue"),
       meta: { requiresAuthentication: true }
     },
     {
@@ -63,35 +74,30 @@ const router = createRouter({
 });
 
 router.afterEach((to) => {
-  const activeLink = ref(0);
-
   const links = document.querySelectorAll("header ul a");
-  const linksList = [];
+  const linksList = Array.from(links).map((link) => ({
+    name: link.innerText.toLowerCase(),
+    width: link.getBoundingClientRect().width
+  }));
 
-  Object.keys(links).forEach((link) => {
-    const details = {
-      name: links[link].innerText.toLowerCase(),
-      width: links[link].getBoundingClientRect().width
-    };
+  const name = ["materials-lessons", "materials-lesson"].includes(to.name) ? "materials" : to.name;
 
-    linksList.push(details);
-  });
+  const activeLink = linksList.findIndex((link) => link.name === name);
 
-  linksList.forEach((link, index) => {
-    if (link.name === to.name) {
-      document.querySelector(":root").style.setProperty("--activeLinkWidth", link.width + "px");
-      activeLink.value = index;
-    }
-  });
+  if (activeLink !== -1) {
+    document
+      .querySelector(":root")
+      .style.setProperty("--activeLinkWidth", linksList[activeLink].width + "px");
 
-  const linksListSum = linksList
-    .slice(0, activeLink.value)
-    .map((link) => link.width)
-    .reduce((previousValue, currentValue) => previousValue + currentValue, 0);
+    const linksListSum = linksList
+      .slice(0, activeLink)
+      .map((link) => link.width)
+      .reduce((previousValue, currentValue) => previousValue + currentValue, 0);
 
-  document
-    .querySelector(":root")
-    .style.setProperty("--activeLinkLocation", linksListSum + activeLink.value * 2 + "px");
+    document
+      .querySelector(":root")
+      .style.setProperty("--activeLinkLocation", linksListSum + activeLink * 2 + "px");
+  }
 });
 
 export default router;
