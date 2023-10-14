@@ -12,7 +12,7 @@
         <p class="text-sm truncate">{{ recentlyAddedChapter.description }}</p>
       </div>
 
-      <PrimaryButton> <p>Read</p> </PrimaryButton>
+      <PrimaryButton> <p>View lessons</p> </PrimaryButton>
     </div>
   </div>
 
@@ -25,11 +25,13 @@
 
     <div class="my-auto px-4 flex items-center justify-between gap-4">
       <div class="flex-1 grid">
-        <p class="font-semibold truncate">{{ `Lesson ${recentlyAddedLesson.number}` }}</p>
+        <p class="font-semibold truncate">
+          {{ `Chapter ${recentlyAddedLesson.chapterNumber}: Lesson ${recentlyAddedLesson.number}` }}
+        </p>
         <p class="text-sm truncate">{{ recentlyAddedLesson.description }}</p>
       </div>
 
-      <PrimaryButton> <p>Read</p> </PrimaryButton>
+      <PrimaryButton> <p>Read lesson</p> </PrimaryButton>
     </div>
   </div>
 </template>
@@ -51,8 +53,15 @@ const getRecentlyAdded = async (type) => {
       ? materials.filter((key) => key.chapter_id === recentlyAdded.chapter_id).length
       : materials.length;
 
+  const getChapterNumber = async () => {
+    const chapters = await readMaterials("chapter");
+    const chaptersIdList = Object.values(chapters).map((chapter) => chapter.id);
+    return chaptersIdList.indexOf(recentlyAdded.chapter_id) + 1;
+  };
+
   return {
     id: recentlyAdded.id,
+    chapterNumber: type === "lesson" && (await getChapterNumber()),
     number: number,
     description: recentlyAdded.description,
     image: recentlyAdded.image

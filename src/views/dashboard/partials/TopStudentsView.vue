@@ -2,23 +2,20 @@
   <div
     v-for="(item, index) in 3"
     :key="index"
-    style="
-      background-image: url(&quot;https://img.freepik.com/free-vector/cute-young-boy-cartoon-character-holding-books_1308-46940.jpg?w=360&t=st=1697224532~exp=1697225132~hmac=fadc3d00644a07075c904f5bc85c3e7cbd5fe6654a06641342d5549d458e9542&quot;);
-    "
-    class="border-gray-300 bg-gray-100 h-36 bg-[length:90%] bg-left bg-no-repeat border rounded-lg"
+    class="border-gray-300 bg-gray-100 text-gray-700 p-2 border rounded-lg grid grid-cols-12"
   >
-    <div
-      class="bg-gradient-to-l from-gray-900 to-gray-600/50 from-10% text-gray-100 h-full p-4 rounded-lg flex items-center justify-between"
-    >
-      <div class="w-16">
-        <p class="text-6xl">{{ index + 1 }}</p>
-      </div>
+    <img
+      src="https://scontent.fmnl9-4.fna.fbcdn.net/v/t39.30808-6/357203077_2509728879194098_204956894696360182_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=5f2048&_nc_ohc=F8Gv3oYxZIMAX_HcFZ5&_nc_ht=scontent.fmnl9-4.fna&oh=00_AfBZOj6mHK3iyHo07xm033J7K83EjBXZlhVyfb8b-QMz3A&oe=652DDB09"
+      alt="Top student image"
+      class="col-span-4 aspect-square object-cover object-center rounded-lg"
+    />
 
-      <div class="flex-1 font-bold grid">
-        <p class="text-lg truncate uppercase tracking-wider">No top {{ index + 1 }}</p>
-
-        <p class="text-lg">No points</p>
-      </div>
+    <div class="col-span-8 p-2 grid">
+      <p class="font-bold truncate">
+        {{ `${index === 0 ? "First" : index === 1 ? "Second" : "Third"} place` }}
+      </p>
+      <p class="text-xs truncate">100 points</p>
+      <p class="mt-2 truncate">Mon Albert Gamil</p>
     </div>
   </div>
 </template>

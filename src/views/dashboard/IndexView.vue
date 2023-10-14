@@ -1,5 +1,5 @@
 <template>
-  <Suspense>
+  <Suspense :key="componentKey">
     <template #default>
       <section class="h-full grid place-items-center">
         <div class="grid grid-cols-12 gap-8">
@@ -7,20 +7,26 @@
             <StatisticsView />
           </div>
 
-          <div class="col-span-8 flex flex-col gap-8">
-            <div class="space-y-2">
-              <p class="text-xl font-bold uppercase">Recently added materials</p>
+          <div class="col-span-8 flex flex-col justify-between">
+            <PrimaryButton @click="rerenderIndexView()" class="self-end">
+              <p>Refresh dashboard</p>
+            </PrimaryButton>
 
-              <div class="grid grid-cols-2 gap-4">
-                <RecentlyAddedView />
+            <div class="flex flex-col gap-8">
+              <div class="space-y-2">
+                <p class="text-xl font-bold uppercase">Recently added materials</p>
+
+                <div class="grid grid-cols-2 gap-2">
+                  <RecentlyAddedView />
+                </div>
               </div>
-            </div>
 
-            <div class="space-y-2">
-              <p class="text-xl font-bold uppercase">Top students on leaderboard</p>
+              <div class="flex flex-col gap-2">
+                <p class="text-xl font-bold uppercase">Top students on leaderboard</p>
 
-              <div class="grid grid-cols-3 gap-4">
-                <TopStudentsView />
+                <div class="grid grid-cols-3 gap-2">
+                  <TopStudentsView />
+                </div>
               </div>
             </div>
           </div>
@@ -63,7 +69,17 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
+
 import StatisticsView from "@/views/dashboard/partials/StatisticsView.vue";
 import RecentlyAddedView from "@/views/dashboard/partials/RecentlyAddedView.vue";
 import TopStudentsView from "@/views/dashboard/partials/TopStudentsView.vue";
+
+import PrimaryButton from "@/components/PrimaryButton.vue";
+
+const componentKey = ref(0);
+
+const rerenderIndexView = () => {
+  componentKey.value++;
+};
 </script>
