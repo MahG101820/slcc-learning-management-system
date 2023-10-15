@@ -1,7 +1,7 @@
 <template>
   <div class="border-gray-300 bg-gray-100 text-gray-700 border rounded-lg flex flex-col">
     <img
-      src="recentlyAddedChapter.image"
+      :src="recentlyAddedChapter.image"
       alt="Recently added chapter's image"
       class="bg-gray-300 w-full aspect-video object-cover rounded-t-lg"
     />
@@ -18,7 +18,7 @@
 
   <div class="border-gray-300 bg-gray-100 text-gray-700 border rounded-lg flex flex-col">
     <img
-      src="recentlyAddedLesson.image"
+      :src="recentlyAddedLesson.image"
       alt="Recently added lesson's image"
       class="bg-gray-300 w-full aspect-video object-cover rounded-t-lg"
     />

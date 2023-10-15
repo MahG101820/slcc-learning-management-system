@@ -21,7 +21,7 @@
     <div class="border-gray-300 bg-gray-100 text-gray-700 border rounded-lg">
       <div class="relative">
         <img
-          src="store.image"
+          :src="store.image"
           alt="Lesson image"
           class="bg-gray-400 w-full h-48 rounded-t-lg object-cover object-center"
         />
