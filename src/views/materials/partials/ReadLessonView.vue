@@ -1,13 +1,27 @@
 <template>
   <section class="h-full space-y-4">
-    <PrimaryButton @click="navigateToLessonsView()">
-      <p>Back to lessons list</p>
-    </PrimaryButton>
+    <div class="flex items-center justify-between gap-2">
+      <PrimaryButton @click="navigateToLessonsView()">
+        <ChevronLeftIcon />
+
+        <p>{{ route.params.description }}</p>
+      </PrimaryButton>
+
+      <div v-if="store.chapterId && store.id" class="flex items-center gap-2">
+        <IconedButton class="bg-sky-600 text-gray-100">
+          <EditIcon />
+        </IconedButton>
+
+        <IconedButton class="bg-rose-600 text-gray-100">
+          <DeleteIcon />
+        </IconedButton>
+      </div>
+    </div>
 
     <div class="border-gray-300 bg-gray-100 text-gray-700 border rounded-lg">
       <div class="relative">
         <img
-          src="https://img.freepik.com/premium-vector/blank-math-template-with-math-tools-elements_1639-28076.jpg?w=740"
+          src="store.image"
           alt="Lesson image"
           class="bg-gray-400 w-full h-48 rounded-t-lg object-cover object-center"
         />
@@ -31,12 +45,17 @@
 </template>
 
 <script setup>
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { useLessonStore } from "@/stores/lesson";
 
 import PrimaryButton from "@/components/PrimaryButton.vue";
+import IconedButton from "@/components/IconedButton.vue";
+import ChevronLeftIcon from "@/assets/icons/ChevronLeftIcon.vue";
+import EditIcon from "@/assets/icons/EditIcon.vue";
+import DeleteIcon from "@/assets/icons/DeleteIcon.vue";
 
 const router = useRouter();
+const route = useRoute();
 const store = useLessonStore();
 
 const navigateToLessonsView = () => {
