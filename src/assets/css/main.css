@@ -12,3 +12,9 @@
     @apply bg-gray-200 text-gray-800 antialiased;
   }
 }
+
+#content img {
+  max-height: 500px;
+  margin-inline: auto;
+  border-radius: 0.5rem;
+}

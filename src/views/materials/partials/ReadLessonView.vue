@@ -24,7 +24,7 @@
       </div>
 
       <div class="p-4">
-        <p v-html="store.content" />
+        <p v-html="store.content" id="content" />
       </div>
     </div>
   </section>
