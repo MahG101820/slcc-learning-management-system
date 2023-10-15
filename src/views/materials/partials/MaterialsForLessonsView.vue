@@ -6,7 +6,7 @@
       :image="item.image"
       :title="`Lessons ${index + 1}`"
       :description="item.description"
-      @click="navigateToReadLessonView(item.id, index + 1, item.description)"
+      @click="navigateToReadLessonView(item, index + 1)"
     />
 
     <button
@@ -21,19 +21,33 @@
 <script setup>
 import { useRouter, useRoute } from "vue-router";
 import { readMaterials } from "@/api/materials";
+import { useLessonStore } from "@/stores/lesson";
 
 import MaterialCard from "@/components/MaterialCard.vue";
 
 const router = useRouter();
 const route = useRoute();
+const store = useLessonStore();
 
 const lessons = await readMaterials("lesson");
 const lessonsList = lessons.filter((lesson) => lesson.chapter_id === Number(route.params.id));
 
-const navigateToReadLessonView = (lessonId, lessonNumber, lessonDescription) => {
+const navigateToReadLessonView = (lesson, index) => {
+  store.reset();
+
+  store.chapterId = route.params.id;
+  store.chapterNumber = route.params.number;
+  store.chapterDescription = route.params.description;
+
+  store.id = lesson.id;
+  store.number = index;
+  store.description = lesson.description;
+  store.image = lesson.image;
+  store.content = lesson.content;
+
   router.push({
     name: "materials-lesson",
-    params: { id: lessonId, number: lessonNumber, description: lessonDescription }
+    params: { id: lesson.id, number: index, description: lesson.description }
   });
 };
 </script>
