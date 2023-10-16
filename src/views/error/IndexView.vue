@@ -1,6 +1,6 @@
 <template>
-  <section class="h-[calc(100vh-2rem)] flex flex-col items-center justify-center gap-4">
-    <img src="@/assets/img/ErrorIcon.svg" alt="Error 404: Page not found" class="w-full" />
+  <section class="flex flex-col items-center justify-center gap-4">
+    <img src="@/assets/img/ErrorIcon.svg" alt="Error 404: Page not found" class="w-1/2" />
 
     <p class="text-xl font-bold">Looks like you've found the doorway to the great nothing</p>
 
