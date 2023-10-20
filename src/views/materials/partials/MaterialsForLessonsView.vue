@@ -67,7 +67,7 @@
 import { ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { readMaterials } from "@/api/materials";
-import { useLessonStore } from "@/stores/lesson";
+import { useReadingStore } from "@/stores/reading";
 
 import MaterialCard from "@/components/MaterialCard.vue";
 import PrimaryButton from "@/components/PrimaryButton.vue";
@@ -79,24 +79,27 @@ import DefaultMaterialImage from "@/assets/img/DefaultMaterialImage.jpg";
 
 const router = useRouter();
 const route = useRoute();
-const store = useLessonStore();
+const store = useReadingStore();
 const modal = ref(null);
-
 const lessons = await readMaterials("lesson");
 const lessonsList = lessons.filter((lesson) => lesson.chapter_id === Number(route.params.id));
 
 const navigateToReadLessonView = (lesson, index) => {
   store.reset();
 
-  store.chapterId = route.params.id;
-  store.chapterNumber = route.params.number;
-  store.chapterDescription = route.params.description;
+  store.reading.chapter = {
+    id: route.params.id,
+    number: route.params.number,
+    description: route.params.description
+  };
 
-  store.id = lesson.id;
-  store.number = index;
-  store.description = lesson.description;
-  store.image = lesson.image;
-  store.content = lesson.content;
+  store.reading.lesson = {
+    id: lesson.id,
+    number: index,
+    description: lesson.description,
+    image: lesson.image,
+    content: lesson.content
+  };
 
   router.push({
     name: "materials-lesson",

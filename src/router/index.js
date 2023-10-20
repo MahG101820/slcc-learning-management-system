@@ -52,7 +52,7 @@ const router = createRouter({
       path: "/administrator",
       name: "administrator",
       component: () => import("@/views/administrator/IndexView.vue"),
-      meta: { requiresAuthentication: true }
+      meta: { requiresAuthentication: false }
     },
     {
       path: "/login",
@@ -74,29 +74,29 @@ const router = createRouter({
 });
 
 router.afterEach((to) => {
-  const links = document.querySelectorAll("header ul a");
-  const linksList = Array.from(links).map((link) => ({
+  const linksList = Array.from(document.querySelectorAll("header ul a"));
+
+  const links = linksList.map((link) => ({
     name: link.innerText.toLowerCase(),
     width: link.getBoundingClientRect().width
   }));
 
-  const name = ["materials-lessons", "materials-lesson"].includes(to.name) ? "materials" : to.name;
+  const activeRouteName = ["materials-lessons", "materials-lesson"].includes(to.name)
+    ? "materials"
+    : to.name;
 
-  const activeLink = linksList.findIndex((link) => link.name === name);
+  const activeLinkIndex = links.findIndex((link) => link.name === activeRouteName);
 
-  if (activeLink !== -1) {
-    document
-      .querySelector(":root")
-      .style.setProperty("--activeLinkWidth", linksList[activeLink].width + "px");
+  if (activeLinkIndex !== -1) {
+    const root = document.querySelector(":root");
 
-    const linksListSum = linksList
-      .slice(0, activeLink)
+    const linksListSum = links
+      .slice(0, activeLinkIndex)
       .map((link) => link.width)
       .reduce((previousValue, currentValue) => previousValue + currentValue, 0);
 
-    document
-      .querySelector(":root")
-      .style.setProperty("--activeLinkLocation", linksListSum + activeLink * 2 + "px");
+    root.style.setProperty("--activeLinkWidth", `${links[activeLinkIndex].width}px`);
+    root.style.setProperty("--activeLinkLocation", `${linksListSum + activeLinkIndex * 2}px`);
   }
 });
 

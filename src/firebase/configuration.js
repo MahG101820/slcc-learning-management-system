@@ -1,12 +1,14 @@
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBg-3u-RuAxdDWcBeI5IYDVKdtc8zLJy9g",
-  authDomain: "slcc-lms.firebaseapp.com",
-  projectId: "slcc-lms",
-  storageBucket: "slcc-lms.appspot.com",
-  messagingSenderId: "675815492504",
-  appId: "1:675815492504:web:6d8776aa3f7e26255eb9ed"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
 const app = initializeApp(firebaseConfig);
+
+export { app };

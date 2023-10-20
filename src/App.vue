@@ -1,7 +1,7 @@
 <template>
   <TheNavbar v-if="navbarVisibility" />
 
-  <main class="p-3 lg:h-[calc(100vh-59.2px)] lg:max-h-[800px]">
+  <main class="p-3 flex-1 overflow-hidden">
     <div class="max-w-screen-xl h-full mx-auto p-1 overflow-x-auto">
       <RouterView />
     </div>
@@ -10,12 +10,12 @@
 
 <script setup>
 import { ref, watch } from "vue";
-import { RouterView, useRoute, useRouter } from "vue-router";
+import { RouterView, useRouter, useRoute } from "vue-router";
 
 import TheNavbar from "@/components/TheNavbar.vue";
 
-const route = useRoute();
 const router = useRouter();
+const route = useRoute();
 const navbarVisibility = ref(route.meta.requiresAuthentication);
 
 watch(

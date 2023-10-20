@@ -1,85 +1,39 @@
 <template>
-  <Suspense :key="componentKey">
+  <Suspense>
     <template #default>
-      <section class="h-full grid place-items-center">
-        <div class="grid grid-cols-12 gap-8">
-          <div class="col-span-4 flex flex-col gap-2">
-            <StatisticsView />
+      <section class="h-full grid grid-cols-12 grid-rows-5 gap-2">
+        <div class="col-span-4 row-span-full p-4 rounded-lg grid grid-rows-6 gap-4">
+          <StatisticsView />
+        </div>
+
+        <div class="col-span-8 row-span-3 p-4 rounded-lg flex flex-col gap-4">
+          <p class="text-xl font-bold uppercase">Recently added materials</p>
+
+          <div class="flex-1 grid grid-flow-col grid-cols-2 gap-2">
+            <RecentlyAddedView />
           </div>
+        </div>
 
-          <div class="col-span-8 flex flex-col justify-between">
-            <PrimaryButton @click="rerenderIndexView()" class="self-end">
-              <p>Refresh dashboard</p>
-            </PrimaryButton>
+        <div class="col-span-8 row-span-2 p-4 rounded-lg flex flex-col gap-4">
+          <p class="text-xl font-bold uppercase">Top students on leaderboards</p>
 
-            <div class="flex flex-col gap-8">
-              <div class="space-y-2">
-                <p class="text-xl font-bold uppercase">Recently added materials</p>
-
-                <div class="grid grid-cols-2 gap-2">
-                  <RecentlyAddedView />
-                </div>
-              </div>
-
-              <div class="flex flex-col gap-2">
-                <p class="text-xl font-bold uppercase">Top students on leaderboard</p>
-
-                <div class="grid grid-cols-3 gap-2">
-                  <TopStudentsView />
-                </div>
-              </div>
-            </div>
+          <div class="flex-1 grid grid-flow-col grid-cols-3 gap-2">
+            <TopStudentsView />
           </div>
         </div>
       </section>
     </template>
 
     <template #fallback>
-      <section class="h-full grid grid-cols-12 gap-4">
-        <div class="col-span-4 flex flex-col gap-4">
-          <div class="border-gray-300 bg-gray-300 flex-1 border rounded-lg animate-pulse" />
-
-          <div
-            v-for="(item, index) in 3"
-            :key="index"
-            class="border-gray-300 bg-gray-300 h-20 border rounded-lg animate-pulse"
-          />
-        </div>
-
-        <div class="col-span-8 grid grid-rows-2 gap-4">
-          <div class="grid grid-cols-2 gap-4">
-            <div
-              v-for="(item, index) in 2"
-              :key="index"
-              class="border-gray-300 bg-gray-300 border rounded-lg animate-pulse"
-            />
-          </div>
-
-          <div class="grid grid-cols-3 gap-4">
-            <div
-              v-for="(item, index) in 3"
-              :key="index"
-              class="border-gray-300 bg-gray-300 border rounded-lg animate-pulse"
-            />
-          </div>
-        </div>
-      </section>
+      <LoaderView />
     </template>
   </Suspense>
 </template>
 
 <script setup>
-import { ref } from "vue";
-
 import StatisticsView from "@/views/dashboard/partials/StatisticsView.vue";
 import RecentlyAddedView from "@/views/dashboard/partials/RecentlyAddedView.vue";
 import TopStudentsView from "@/views/dashboard/partials/TopStudentsView.vue";
 
-import PrimaryButton from "@/components/PrimaryButton.vue";
-
-const componentKey = ref(0);
-
-const rerenderIndexView = () => {
-  componentKey.value++;
-};
+import LoaderView from "@/views/dashboard/partials/LoaderView.vue";
 </script>

@@ -1,63 +1,59 @@
 <template>
-  <div class="border-gray-300 bg-gray-100 mb-8 p-4 border rounded-lg grid">
-    <p class="font-bold text-center uppercase grid">
-      <span class="text-xl">Welcome back to</span>
-      <span class="text-sm">SLCC E-Learning portal</span>
-    </p>
+  <div
+    class="border-gray-300 bg-gray-100 row-span-3 p-4 border rounded-lg flex flex-col items-center justify-center gap-4"
+  >
+    <div class="relative">
+      <img
+        @error="handleErrorOnFetching"
+        :src="imageSource"
+        alt="Profile picture"
+        class="border-emerald-600 bg-gray-300 w-32 aspect-square border-4 rounded-full object-cover object-center"
+      />
 
-    <div class="p-4 grid place-items-center gap-4">
-      <div class="relative">
-        <img
-          src="https://scontent.fmnl9-4.fna.fbcdn.net/v/t39.30808-6/357203077_2509728879194098_204956894696360182_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=5f2048&_nc_ohc=F8Gv3oYxZIMAX_HcFZ5&_nc_ht=scontent.fmnl9-4.fna&oh=00_AfBZOj6mHK3iyHo07xm033J7K83EjBXZlhVyfb8b-QMz3A&oe=652DDB09"
-          alt="Profile picture"
-          class="border-emerald-600 bg-gray-200 w-32 aspect-square border-4 rounded-full object-cover object-center"
-        />
+      <p
+        class="border-gray-100 bg-emerald-600 text-gray-100 w-8 aspect-square text-xs border-4 rounded-full grid place-items-center absolute left-2 bottom-0"
+      >
+        S
+      </p>
+    </div>
 
-        <p
-          class="border-gray-100 bg-emerald-600 text-gray-100 w-8 aspect-square text-xs border-4 rounded-full grid place-items-center absolute left-2 bottom-0"
-        >
-          S
-        </p>
-      </div>
+    <div class="text-center grid">
+      <p class="font-medium uppercase truncate">Nikola Tesla</p>
 
-      <div class="flex-1 text-center grid gap-1.5">
-        <p class="font-medium uppercase truncate">Mon Albert L. Gamil</p>
-
-        <p
-          class="border-gray-300 bg-gray-200 text-gray-800 px-2 py-1 text-xs truncate border rounded-full"
-        >
-          mrgamilmonalbert@gmail.com
-        </p>
-      </div>
+      <p
+        class="border-gray-300/50 bg-gray-200/50 text-gray-800 w-max mx-auto px-2 py-1 text-xs truncate border rounded-full"
+      >
+        nikolatesla@gmail.com
+      </p>
     </div>
   </div>
 
   <div
-    class="border-purple-300 bg-purple-100 text-purple-600 p-4 border rounded-lg flex items-center justify-between"
+    class="border-gray-300 bg-gray-100 text-purple-600 p-4 border rounded-lg flex items-center justify-between"
   >
-    <div class="flex items-center gap-2">
-      <div>
-        <MaterialsIcon />
+    <div class="flex-1 flex items-center gap-2">
+      <div class="`border-purple-300 bg-purple-100 w-10 aspect-square border rounded grid place-items-center`">
+        <MaterialsIcon class="m-auto" />
       </div>
 
-      <div>
+      <div class="flex-1">
         <p class="font-medium uppercase">Materials</p>
         <p class="text-gray-600 text-xs">Available materials</p>
       </div>
     </div>
 
-    <p
-      class="border-purple-300 bg-purple-200 w-8 aspect-square font-bold border rounded-lg grid place-items-center"
-    >
-      {{ chapters.length }}
-    </p>
+    <p class="mr-2 text-4xl font-bold">0</p>
   </div>
 
   <div
-    class="border-teal-300 bg-teal-100 text-teal-600 p-4 border rounded-lg flex items-center justify-between"
+    class="border-gray-300 bg-gray-100 text-sky-600 p-4 border rounded-lg flex items-center justify-between"
   >
-    <div class="flex items-center gap-2">
-      <QuizzesIcon />
+    <div class="flex-1 flex items-center gap-2">
+      <div
+        class="`border-sky-300 bg-sky-100 w-10 aspect-square border rounded grid place-items-center`"
+      >
+        <QuizzesIcon class="m-auto" />
+      </div>
 
       <div>
         <p class="font-medium uppercase">Quizzes</p>
@@ -65,19 +61,17 @@
       </div>
     </div>
 
-    <p
-      class="border-teal-300 bg-teal-200 w-8 aspect-square font-bold border rounded-lg grid place-items-center"
-    >
-      0
-    </p>
+    <p class="mr-2 text-4xl font-bold">0</p>
   </div>
 
   <div
-    class="border-amber-300 bg-amber-100 text-amber-600 p-4 border rounded-lg flex items-center justify-between"
+    class="border-gray-300 bg-gray-100 text-amber-600 p-4 border rounded-lg flex items-center justify-between"
   >
-    <div class="flex items-center gap-2">
-      <div>
-        <LeaderboardIcon />
+    <div class="flex-1 flex items-center gap-2">
+      <div
+        class="`border-amber-300 bg-amber-100 w-10 aspect-square border rounded grid place-items-center`"
+      >
+        <LeaderboardIcon class="m-auto" />
       </div>
 
       <div>
@@ -86,20 +80,21 @@
       </div>
     </div>
 
-    <p
-      class="border-amber-300 bg-amber-200 w-8 aspect-square font-bold border rounded-lg grid place-items-center"
-    >
-      0
-    </p>
+    <p class="mr-2 text-4xl font-bold">0</p>
   </div>
 </template>
 
 <script setup>
-import { readMaterials } from "@/api/materials";
+import { ref } from "vue";
 
 import MaterialsIcon from "@/assets/icons/MaterialsIcon.vue";
 import QuizzesIcon from "@/assets/icons/QuizzesIcon.vue";
 import LeaderboardIcon from "@/assets/icons/LeaderboardIcon.vue";
+import ImagePlaceholder from "@/assets/img/ImagePlaceholder.jpg";
 
-const chapters = await readMaterials("chapter");
+const imageSource = ref(
+  "https://img.freepik.com/free-vector/nikola-tesla-cartoon-character-white-background_1308-81627.jpg?w=826&t=st=1697682902~exp=1697683502~hmac=2014106291a496e2aa4874f0449edd49f14d27764f4740273806aaf1665b1f76"
+);
+
+const handleErrorOnFetching = () => (imageSource.value = ImagePlaceholder);
 </script>

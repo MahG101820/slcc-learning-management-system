@@ -4,7 +4,7 @@
       <PrimaryButton @click="navigateToChaptersView()">
         <ChevronLeftIcon />
 
-        <p>{{ route.params.description }}</p>
+        <p>{{ `Chapter ${route.params.number}` }}</p>
       </PrimaryButton>
 
       <div v-if="materialsForLessonsView" class="flex items-center gap-2">

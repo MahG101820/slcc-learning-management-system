@@ -33,9 +33,7 @@
           </li>
         </ul>
 
-        <PrimaryButton>
-          <p>Logout</p>
-        </PrimaryButton>
+        <PrimaryButton> Sign out </PrimaryButton>
       </div>
     </nav>
   </header>
@@ -52,8 +50,8 @@
       <div class="grid place-items-center gap-4">
         <div class="relative">
           <img
-            src="https://scontent.fmnl9-4.fna.fbcdn.net/v/t39.30808-6/357203077_2509728879194098_204956894696360182_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=5f2048&_nc_ohc=F8Gv3oYxZIMAX_HcFZ5&_nc_ht=scontent.fmnl9-4.fna&oh=00_AfBZOj6mHK3iyHo07xm033J7K83EjBXZlhVyfb8b-QMz3A&oe=652DDB09"
-            alt="Profile picture"
+            src=""
+            alt=""
             class="border-emerald-600 bg-gray-200 w-32 aspect-square border-4 rounded-full object-cover object-center"
           />
 
@@ -89,9 +87,7 @@
         </li>
       </ul>
 
-      <PrimaryButton>
-        <p class="mx-auto font-medium">Logout</p>
-      </PrimaryButton>
+      <PrimaryButton> Sign out </PrimaryButton>
     </nav>
   </aside>
 </template>

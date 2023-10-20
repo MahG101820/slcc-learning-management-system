@@ -8,8 +8,29 @@
     --activeLinkLocation: 0;
   }
 
+  html,
   body {
-    @apply bg-gray-200 text-gray-800 antialiased;
+    @apply bg-gray-200 text-gray-800 h-full antialiased;
+  }
+
+  #app {
+    @apply h-full relative flex flex-col;
+  }
+
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-emerald-600 rounded-lg;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-emerald-700;
   }
 }
 

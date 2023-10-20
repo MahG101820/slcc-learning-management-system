@@ -10,7 +10,7 @@
     />
 
     <button
-      @click="showModal()"
+      @click="showModal"
       type="button"
       class="border-gray-300 bg-gray-100 text-gray-700 col-span-3 h-64 border rounded-lg grid place-items-center"
     >
@@ -20,24 +20,37 @@
 
   <dialog ref="modal" class="bg-transparent">
     <form
-      @submit.prevent=""
+      @submit.prevent="submitForm"
       class="border-gray-300 bg-gray-100 text-gray-700 min-w-[24rem] max-w-xl p-4 border rounded-lg flex flex-col gap-8"
     >
       <div class="flex items-center justify-between gap-4">
         <p class="font-bold uppercase truncate">Create new chapter</p>
 
-        <IconedButton @click="unshowModal()">
+        <IconedButton @click="unshowModal">
           <CloseIcon />
         </IconedButton>
       </div>
 
       <div class="space-y-2">
-        <InputText v-model.trim="chapter.description" id="title" label="Description" required />
+        <InputText
+          v-model.trim="chapter.description"
+          id="title"
+          label="Description"
+          class="mb-4"
+          required
+        />
 
-        <input type="file" id="image" class="hidden" name="image" accept="image/png, image/jpeg" />
+        <input
+          @change="handleImageUploading"
+          type="file"
+          id="image"
+          class="hidden"
+          name="image"
+          accept="image/png, image/jpeg"
+        />
 
         <img
-          :src="DefaultMaterialImage"
+          :src="chapter.image"
           alt="Material image"
           class="bg-gray-200 w-full aspect-video rounded-lg object-cover object-center"
         />
@@ -51,7 +64,7 @@
       </div>
 
       <div class="flex items-center justify-end gap-2">
-        <NeutralButton @click="unshowModal()">
+        <NeutralButton @click="unshowModal">
           <p>Cancel</p>
         </NeutralButton>
 
@@ -64,7 +77,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { readMaterials } from "@/api/materials";
 
@@ -79,10 +92,10 @@ import DefaultMaterialImage from "@/assets/img/DefaultMaterialImage.jpg";
 const router = useRouter();
 const chapters = await readMaterials("chapter");
 const modal = ref(null);
-
-const chapter = ref({
+const file = ref(null);
+const chapter = reactive({
   description: "",
-  image: ""
+  image: DefaultMaterialImage
 });
 
 const navigateToLessonsView = (chapterId, chapterNumber, chapterDescription) => {
@@ -92,11 +105,28 @@ const navigateToLessonsView = (chapterId, chapterNumber, chapterDescription) => 
   });
 };
 
+const reset = () => {
+  URL.revokeObjectURL(file.value);
+  file.value = null;
+  chapter.description = "";
+  chapter.image = DefaultMaterialImage;
+};
+
 const showModal = () => {
+  reset();
   modal.value.showModal();
 };
 
 const unshowModal = () => {
+  reset();
   modal.value.close();
 };
+
+const handleImageUploading = (event) => {
+  const uploadedImage = event.target.files[0];
+  file.value = URL.createObjectURL(uploadedImage);
+  chapter.image = file.value; 
+};
+
+const submitForm = () => {};
 </script>

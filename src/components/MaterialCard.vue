@@ -5,6 +5,7 @@
   >
     <img
       :src="props.image"
+      @error="handleErrorOnLoading()"
       alt="Material image"
       class="bg-gray-300 w-full aspect-video object-cover rounded-t-lg"
     />
@@ -21,5 +22,14 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
+import ImagePlaceholder from "@/assets/img/ImagePlaceholder.jpg";
+
 const props = defineProps(["image", "title", "description"]);
+
+const imageSource = ref(props.image);
+
+const handleErrorOnLoading = () => {
+  imageSource.value = ImagePlaceholder;
+};
 </script>

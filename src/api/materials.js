@@ -9,7 +9,6 @@ headers.append("Authorization", "token");
 const createMaterials = async (material) => {
   try {
     const url = new URL(`${baseUrl}/get-${material}`);
-
     const response = await fetch(url, { method: "POST", headers, body: formData });
 
     if (response.ok) {
@@ -43,7 +42,6 @@ const readMaterials = async (material) => {
 const updateMaterials = async (material) => {
   try {
     const url = new URL(`${baseUrl}/get-${material}`);
-
     const response = await fetch(url, { method: "POST", headers, body: formData });
 
     if (response.ok) {
@@ -59,7 +57,6 @@ const updateMaterials = async (material) => {
 const deleteMaterials = async (material) => {
   try {
     const url = new URL(`${baseUrl}/get-${material}`);
-
     const response = await fetch(url, { method: "POST", headers, body: formData });
 
     if (response.ok) {
