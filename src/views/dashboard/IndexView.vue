@@ -25,21 +25,32 @@
     </template>
 
     <template #fallback>
-      <LoaderView />
+      <template v-if="hasError">
+        <div class="h-full grid place-items-center">
+          <img :src="ServerErrorIcon" alt="Server Error Icon" class="w-[35rem]" />
+        </div>
+      </template>
+
+      <template v-else>
+        <LoaderView />
+      </template>
     </template>
   </Suspense>
 </template>
 
 <script setup>
-import { onErrorCaptured } from "vue";
+import { ref, onErrorCaptured } from "vue";
 
 import StatisticsView from "@/views/dashboard/partials/StatisticsView.vue";
 import RecentlyAddedView from "@/views/dashboard/partials/RecentlyAddedView.vue";
 import TopStudentsView from "@/views/dashboard/partials/TopStudentsView.vue";
 import LoaderView from "@/views/dashboard/partials/LoaderView.vue";
+import ServerErrorIcon from "@/assets/img/ServerErrorIcon.png";
 
-const handleError = (error) => {
-  console.error("Error loading component:", error);
+const hasError = ref(false);
+
+const handleError = () => {
+  hasError.value = true;
 };
 
 onErrorCaptured(handleError);
