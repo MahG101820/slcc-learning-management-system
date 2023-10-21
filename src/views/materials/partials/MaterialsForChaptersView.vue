@@ -23,8 +23,11 @@
       @submit.prevent="submitForm"
       class="border-gray-300 bg-gray-100 text-gray-700 min-w-[24rem] max-w-xl p-4 border rounded-lg flex flex-col gap-8"
     >
-      <div class="flex items-center justify-between gap-4">
-        <p class="font-bold uppercase truncate">Create new chapter</p>
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="font-bold uppercase truncate">Create new chapter</p>
+          <p class="text-xs">Chapter {{ chapters.length + 1 }}</p>
+        </div>
 
         <IconedButton @click="unshowModal">
           <CloseIcon />
@@ -50,7 +53,7 @@
         />
 
         <img
-          :src="chapter.image"
+          :src="file ? file : DefaultMaterialImage"
           alt="Material image"
           class="bg-gray-200 w-full aspect-video rounded-lg object-cover object-center"
         />
@@ -68,7 +71,7 @@
           <p>Cancel</p>
         </NeutralButton>
 
-        <PrimaryButton type="submit">
+        <PrimaryButton type="submit" :disabled="loading">
           <p>Create</p>
         </PrimaryButton>
       </div>
@@ -77,9 +80,10 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { readMaterials } from "@/api/materials";
+import { uploadImage } from "@/firebase/storage";
 
 import MaterialCard from "@/components/MaterialCard.vue";
 import PrimaryButton from "@/components/PrimaryButton.vue";
@@ -93,6 +97,7 @@ const router = useRouter();
 const chapters = await readMaterials("chapter");
 const modal = ref(null);
 const file = ref(null);
+const loading = ref(false);
 const chapter = reactive({
   description: "",
   image: DefaultMaterialImage
@@ -123,10 +128,30 @@ const unshowModal = () => {
 };
 
 const handleImageUploading = (event) => {
-  const uploadedImage = event.target.files[0];
-  file.value = URL.createObjectURL(uploadedImage);
-  chapter.image = file.value; 
+  URL.revokeObjectURL(file.value);
+  file.value = null;
+
+  chapter.image = event.target.files[0];
+  file.value = URL.createObjectURL(chapter.image);
 };
 
-const submitForm = () => {};
+const submitForm = async () => {
+  loading.value = true;
+
+  const response = await uploadImage(chapter.image, "chapters/test");
+  const result = ref(null);
+
+  result.value = response;
+
+  watchEffect(() => {
+    if (result.value) {
+      loading.value = false;
+    }
+
+    result.value = null;
+    unshowModal();
+
+    alert("Successfully uploaded image");
+  });
+};
 </script>

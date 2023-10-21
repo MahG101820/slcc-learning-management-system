@@ -5,7 +5,7 @@
     </template>
 
     <template #fallback>
-      <div class="grid grid-cols-12 gap-2">
+      <div class="grid grid-cols-12 gap-x-2 gap-y-8">
         <div class="border-gray-300 bg-gray-300 col-span-3 h-64 border rounded-lg animate-pulse" />
       </div>
     </template>

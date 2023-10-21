@@ -6,15 +6,21 @@ headers.append("Content-Type", "multipart/form-data");
 headers.append("Accept", "application/json");
 headers.append("Authorization", "token");
 
-const createMaterials = async (material) => {
+const createMaterials = async (material, form) => {
   try {
+    formData.append("description", form.description);
+    formData.append("image", form.image);
+
     const url = new URL(`${baseUrl}/get-${material}`);
-    const response = await fetch(url, { method: "POST", headers, body: formData });
+    const response = await fetch(url, { method: "POST", headers: headers, body: formData });
 
     if (response.ok) {
       formData.clear();
-      const data = await response.json();
-      return data;
+
+      const result = await response.json();
+      console.log(response);
+      console.log(result);
+      return result;
     }
   } catch (error) {
     console.error(error);
@@ -27,11 +33,11 @@ const readMaterials = async (material) => {
     const response = await fetch(url);
 
     if (response.ok) {
-      const data = await response.json();
+      const result = await response.json();
 
-      if (data.status_code === 200) {
-        const filteredData = data[`${material}s`];
-        return filteredData;
+      if (result.status_code === 200) {
+        const data = result[`${material}s`];
+        return data;
       }
     }
   } catch (error) {

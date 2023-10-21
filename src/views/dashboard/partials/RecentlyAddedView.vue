@@ -13,7 +13,7 @@
         <p class="text-sm truncate">{{ recentlyAddedChapter.description }}</p>
       </div>
 
-      <PrimaryButton @click="navigateToRecentlyAddedChapter()"> View lessons </PrimaryButton>
+      <PrimaryButton @click="navigateToRecentlyAddedChapter"> View lessons </PrimaryButton>
     </div>
   </div>
 
@@ -33,7 +33,7 @@
         <p class="text-sm truncate">{{ recentlyAddedLesson.description }}</p>
       </div>
 
-      <PrimaryButton> Read lesson </PrimaryButton>
+      <PrimaryButton @click="navigateToRecentlyAddedLesson"> Read lesson </PrimaryButton>
     </div>
   </div>
 </template>
@@ -42,11 +42,13 @@
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
 import { readMaterials } from "@/api/materials";
+import { useReadingStore } from "@/stores/reading";
 
 import PrimaryButton from "@/components/PrimaryButton.vue";
 import ImagePlaceholder from "@/assets/img/ImagePlaceholder.jpg";
 
 const router = useRouter();
+const store = useReadingStore();
 
 // get recently added chapter
 const recentlyAddedChapter = reactive({});
@@ -66,10 +68,15 @@ const lesson = lessons[lessons.length - 1];
 
 // assigning values to recently added lesson variable
 recentlyAddedLesson.id = lesson.id;
-recentlyAddedLesson.chapter = chapters.findIndex((key) => key.id === lesson.chapter_id) + 1;
+recentlyAddedLesson.chapter = {
+  id: lesson.chapter_id,
+  number: chapters.findIndex((key) => key.id === lesson.chapter_id) + 1,
+  description: chapters.find((key) => key.id === lesson.chapter_id).description
+};
 recentlyAddedLesson.number = lessons.filter((key) => key.chapter_id === lesson.chapter_id).length;
 recentlyAddedLesson.description = lesson.description;
 recentlyAddedLesson.image = lesson.image;
+recentlyAddedLesson.content = lesson.content;
 
 // handle error on loading images
 const handleErrorOnLoading = (source) => {
@@ -88,6 +95,34 @@ const navigateToRecentlyAddedChapter = () => {
       id: recentlyAddedChapter.id,
       number: recentlyAddedChapter.number,
       description: recentlyAddedChapter.description
+    }
+  });
+};
+
+// navigate to recently added lesson
+const navigateToRecentlyAddedLesson = () => {
+  store.reset();
+
+  store.reading.chapter = {
+    id: recentlyAddedLesson.chapter.id,
+    number: recentlyAddedLesson.chapter.number,
+    description: recentlyAddedLesson.chapter.description
+  };
+
+  store.reading.lesson = {
+    id: recentlyAddedLesson.id,
+    number: recentlyAddedLesson.number,
+    description: recentlyAddedLesson.description,
+    image: recentlyAddedLesson.image,
+    content: recentlyAddedLesson.content
+  };
+
+  router.push({
+    name: "materials-lesson",
+    params: {
+      id: recentlyAddedLesson.id,
+      number: recentlyAddedLesson.number,
+      description: recentlyAddedLesson.description
     }
   });
 };

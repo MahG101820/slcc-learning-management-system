@@ -1,6 +1,6 @@
 <template>
   <div
-    v-for="(item, index) in 3"
+    v-for="(_, index) in 3"
     :key="index"
     class="border-gray-300 bg-gray-100 text-gray-700 p-2 border rounded-lg flex flex-col gap-2"
   >

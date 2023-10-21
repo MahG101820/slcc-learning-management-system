@@ -32,7 +32,9 @@
     class="border-gray-300 bg-gray-100 text-purple-600 p-4 border rounded-lg flex items-center justify-between"
   >
     <div class="flex-1 flex items-center gap-2">
-      <div class="`border-purple-300 bg-purple-100 w-10 aspect-square border rounded grid place-items-center`">
+      <div
+        class="`border-purple-300 bg-purple-100 w-10 aspect-square border rounded grid place-items-center`"
+      >
         <MaterialsIcon class="m-auto" />
       </div>
 
