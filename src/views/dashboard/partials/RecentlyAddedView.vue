@@ -28,7 +28,7 @@
     <div class="my-auto px-4 flex items-center justify-between gap-4">
       <div class="flex-1 grid">
         <p class="font-semibold truncate">
-          {{ `Chapter ${recentlyAddedLesson.chapter}: Lesson ${recentlyAddedLesson.number}` }}
+          {{ `Chapter ${recentlyAddedLesson.chapter.number}: Lesson ${recentlyAddedLesson.number}` }}
         </p>
         <p class="text-sm truncate">{{ recentlyAddedLesson.description }}</p>
       </div>
