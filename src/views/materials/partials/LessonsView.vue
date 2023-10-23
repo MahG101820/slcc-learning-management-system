@@ -105,7 +105,8 @@
 
 <script setup>
 import { useRouter } from "vue-router";
-import { ref, reactive } from "vue";
+import { ref, reactive, watchEffect } from "vue";
+import { uploadImage, downloadImage } from "@/firebase/storage";
 import { updateMaterials, deleteMaterials } from "@/api/materials";
 import { useChapterStore } from "@/stores/chapter";
 
@@ -160,39 +161,49 @@ const handleImageUploading = (event) => {
 
   chapter.image = event.target.files[0];
   file.value = URL.createObjectURL(chapter.image);
-
-  console.log(file.value);
 };
 
 const submitForm = async () => {
+  const result = ref(null);
+
   loading.value = true;
 
-  if (modalTitle.value === "Edit chapter") {
-    chapter.image = chapter.image ? chapter.image : store.chapter.image;
+  const response = await uploadImage(chapter.image, `chapters/chapter${store.chapter.number}`);
+  result.value = response;
 
-    const response = await updateMaterials("chapter", chapter);
+  watchEffect(async () => {
+    if (result.value === "success") {
+      const imageUrl = await downloadImage(`chapters/chapter${store.chapter.number}}`);
 
-    console.log(response);
+      chapter.image = imageUrl;
 
-    if (response.status_code === 200) {
+      if (modalTitle.value === "Edit chapter") {
+        chapter.image = chapter.image ? chapter.image : store.chapter.image;
+
+        const response = await updateMaterials("chapter", chapter);
+
+        if (response.status_code === 200) {
+          loading.value = false;
+
+          alert(`Chapter ${store.chapter.id} successfully updated!`);
+        }
+      } else {
+        const response = await deleteMaterials("chapter", store.chapter.id);
+
+        if (response === 200) {
+          loading.value = false;
+
+          alert(`Chapter ${store.chapter.id} successfully deleted!`);
+        }
+      }
+
       loading.value = false;
+      result.value = null;
 
-      alert(`Chapter ${store.chapter.id} successfully updated!`);
+      unshowModal();
+
+      router.push({ name: "materials" });
     }
-  } else {
-    const response = await deleteMaterials("chapter", store.chapter.id);
-
-    if (response === 200) {
-      loading.value = false;
-
-      alert(`Chapter ${store.chapter.id} successfully deleted!`);
-    }
-  }
-
-  loading.value = false;
-
-  unshowModal();
-
-  router.push({ name: "materials" });
+  });
 };
 </script>

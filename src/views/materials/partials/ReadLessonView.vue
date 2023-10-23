@@ -8,11 +8,11 @@
       </PrimaryButton>
 
       <div v-if="chapter.id && lesson.id" class="flex items-center gap-2">
-        <IconedButton class="bg-sky-600 text-gray-100">
+        <IconedButton @click="showModal(`edit`)" class="bg-sky-600 text-gray-100">
           <EditIcon />
         </IconedButton>
 
-        <IconedButton class="bg-rose-600 text-gray-100">
+        <IconedButton @click="showModal(`delete`)" class="bg-rose-600 text-gray-100">
           <DeleteIcon />
         </IconedButton>
       </div>
@@ -42,14 +42,62 @@
       </div>
     </div>
   </section>
+
+  <dialog ref="modal" class="bg-transparent">
+    <form
+      @submit.prevent="submitForm"
+      class="border-gray-300 bg-gray-100 text-gray-700 min-w-[24rem] max-w-xl p-4 border rounded-lg flex flex-col gap-8"
+    >
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="font-bold uppercase truncate">{{ modalTitle }}</p>
+          <p class="text-xs">
+            {{ `Lesson ${lesson.number}: ${lesson.description}` }}
+          </p>
+        </div>
+
+        <IconedButton @click="unshowModal">
+          <CloseIcon />
+        </IconedButton>
+      </div>
+
+      <div v-if="modalTitle === `Edit lesson`" class="space-y-2">
+        <p>Edit lesson -></p>
+      </div>
+
+      <div v-else class="px-4">
+        <p class="font-semibold">Do you really want to delete this chapter?</p>
+        <p class="text-sm">
+          All lesson(s) in this chapter will also be deleted and it cannot be undone!
+        </p>
+      </div>
+
+      <div class="flex items-center justify-end gap-2">
+        <NeutralButton @click="unshowModal"> Cancel </NeutralButton>
+
+        <PrimaryButton
+          :disabled="loading"
+          type="submit"
+          :class="
+            modalTitle === `Edit lesson`
+              ? `border-emerald-600 bg-emerald-600`
+              : `border-rose-600 bg-rose-600`
+          "
+        >
+          {{ modalTitle === "Edit lesson" ? "Save" : "Delete" }}
+        </PrimaryButton>
+      </div>
+    </form>
+  </dialog>
 </template>
 
 <script setup>
-import { toRefs } from "vue";
+import { ref, toRefs } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useReadingStore } from "@/stores/reading";
 
 import PrimaryButton from "@/components/PrimaryButton.vue";
+import NeutralButton from "@/components/NeutralButton.vue";
 import IconedButton from "@/components/IconedButton.vue";
 import ChevronLeftIcon from "@/assets/icons/ChevronLeftIcon.vue";
 import EditIcon from "@/assets/icons/EditIcon.vue";
@@ -57,11 +105,23 @@ import DeleteIcon from "@/assets/icons/DeleteIcon.vue";
 
 const router = useRouter();
 const route = useRoute();
+const modal = ref(null);
+const modalTitle = ref();
 const store = useReadingStore();
 const { chapter, lesson } = toRefs(store.reading);
 
 const navigateToLessonsView = () => {
   store.reset();
   router.go(-1);
+};
+
+const showModal = (operation) => {
+  modalTitle.value = operation === "edit" ? "Edit lesson" : "Delete lesson";
+
+  modal.value.showModal();
+};
+
+const unshowModal = () => {
+  modal.value.close();
 };
 </script>

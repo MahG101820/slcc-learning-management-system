@@ -10,7 +10,7 @@
     />
 
     <button
-      @click="showModal()"
+      @click="showModal"
       type="button"
       class="border-gray-300 bg-gray-100 text-gray-700 col-span-3 h-64 border rounded-lg grid place-items-center"
     >
@@ -26,7 +26,7 @@
       <div class="flex items-center justify-between gap-4">
         <p class="font-bold uppercase truncate">Create new lesson</p>
 
-        <IconedButton @click="unshowModal()">
+        <IconedButton @click="unshowModal">
           <CloseIcon />
         </IconedButton>
       </div>
@@ -46,18 +46,14 @@
           for="image"
           class="border-emerald-600 bg-emerald-600 text-gray-100 w-max px-4 py-2 border rounded-lg flex items-center gap-4 cursor-pointer"
         >
-          <p>Upload image</p>
+          Upload image
         </label>
       </div>
 
       <div class="flex items-center justify-end gap-2">
-        <NeutralButton @click="unshowModal()">
-          <p>Cancel</p>
-        </NeutralButton>
+        <NeutralButton @click="unshowModal"> Cancel </NeutralButton>
 
-        <PrimaryButton type="submit">
-          <p>Create</p>
-        </PrimaryButton>
+        <PrimaryButton type="submit"> Create </PrimaryButton>
       </div>
     </form>
   </dialog>
@@ -68,6 +64,7 @@ import { ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { readMaterials } from "@/api/materials";
 import { useReadingStore } from "@/stores/reading";
+import { useChapterStore } from "@/stores/chapter";
 
 import MaterialCard from "@/components/MaterialCard.vue";
 import PrimaryButton from "@/components/PrimaryButton.vue";
@@ -79,12 +76,14 @@ import DefaultMaterialImage from "@/assets/img/DefaultMaterialImage.jpg";
 
 const router = useRouter();
 const route = useRoute();
-const store = useReadingStore();
+const store = useChapterStore();
 const modal = ref(null);
 const lessons = await readMaterials("lesson");
-const lessonsList = lessons.filter((lesson) => lesson.chapter_id === Number(route.params.id));
+const lessonsList = lessons.filter((lesson) => lesson.chapter_id === store.chapter.id);
 
 const navigateToReadLessonView = (lesson, index) => {
+  const store = useReadingStore();
+
   store.reset();
 
   store.reading.chapter = {
