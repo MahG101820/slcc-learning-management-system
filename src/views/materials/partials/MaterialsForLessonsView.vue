@@ -3,7 +3,7 @@
     <MaterialCard
       v-for="(item, index) in lessonsList"
       :key="index"
-      image="item.image"
+      :image="item.image"
       :title="`Lessons ${index + 1}`"
       :description="item.description"
       @click="navigateToReadLessonView(item, index + 1)"
