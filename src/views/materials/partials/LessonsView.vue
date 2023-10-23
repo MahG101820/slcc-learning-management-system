@@ -1,10 +1,10 @@
 <template>
   <section class="h-full space-y-4">
     <div class="flex items-center justify-between gap-2">
-      <PrimaryButton @click="navigateToChaptersView()">
+      <PrimaryButton @click="navigateToChaptersView">
         <ChevronLeftIcon />
 
-        <p>{{ `Chapter ${route.params.number}` }}</p>
+        <p>{{ `Chapter ${store.chapter.number}` }}</p>
       </PrimaryButton>
 
       <div v-if="materialsForLessonsView" class="flex items-center gap-2">
@@ -35,24 +35,36 @@
 
   <dialog ref="modal" class="bg-transparent">
     <form
-      @submit.prevent=""
+      @submit.prevent="submitForm"
       class="border-gray-300 bg-gray-100 text-gray-700 min-w-[24rem] max-w-xl p-4 border rounded-lg flex flex-col gap-8"
     >
-      <div class="flex items-center justify-between gap-4">
-        <p class="font-bold uppercase truncate">{{ modalTitle }}</p>
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="font-bold uppercase truncate">Create new chapter</p>
+          <p class="text-xs">
+            {{ `Chapter ${store.chapter.number}: ${store.chapter.description}` }}
+          </p>
+        </div>
 
-        <IconedButton @click="unshowModal()">
+        <IconedButton @click="unshowModal">
           <CloseIcon />
         </IconedButton>
       </div>
 
-      <div v-if="modalTitle === `Edit lesson`" class="space-y-2">
-        <InputText id="title" label="Description" required />
+      <div v-if="modalTitle === `Edit chapter`" class="space-y-2">
+        <InputText v-model.trim="chapter.description" id="title" label="Description" required />
 
-        <input type="file" id="image" class="hidden" name="image" accept="image/png, image/jpeg" />
+        <input
+          @change="handleImageUploading"
+          type="file"
+          id="image"
+          class="hidden"
+          name="image"
+          accept="image/png, image/jpeg"
+        />
 
         <img
-          :src="DefaultMaterialImage"
+          :src="file ? file : store.chapter.image"
           alt="Material image"
           class="bg-gray-200 w-full aspect-video rounded-lg object-cover object-center"
         />
@@ -61,7 +73,7 @@
           for="image"
           class="border-emerald-600 bg-emerald-600 text-gray-100 w-max px-4 py-2 border rounded-lg flex items-center gap-4 cursor-pointer"
         >
-          <p>Upload image</p>
+          Upload image
         </label>
       </div>
 
@@ -73,12 +85,18 @@
       </div>
 
       <div class="flex items-center justify-end gap-2">
-        <NeutralButton @click="unshowModal()">
-          <p>Cancel</p>
-        </NeutralButton>
+        <NeutralButton @click="unshowModal"> Cancel </NeutralButton>
 
-        <PrimaryButton type="submit" class="border-rose-600 bg-rose-600">
-          <p>Delete</p>
+        <PrimaryButton
+          :disabled="loading"
+          type="submit"
+          :class="
+            modalTitle === `Edit chapter`
+              ? `border-emerald-600 bg-emerald-600`
+              : `border-rose-600 bg-rose-600`
+          "
+        >
+          {{ modalTitle === "Edit chapter" ? "Save" : "Delete" }}
         </PrimaryButton>
       </div>
     </form>
@@ -86,8 +104,10 @@
 </template>
 
 <script setup>
-import { useRouter, useRoute } from "vue-router";
-import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { ref, reactive } from "vue";
+import { updateMaterials, deleteMaterials } from "@/api/materials";
+import { useChapterStore } from "@/stores/chapter";
 
 import MaterialsForLessonsView from "@/views/materials/partials/MaterialsForLessonsView.vue";
 import PrimaryButton from "@/components/PrimaryButton.vue";
@@ -98,24 +118,81 @@ import ChevronLeftIcon from "@/assets/icons/ChevronLeftIcon.vue";
 import EditIcon from "@/assets/icons/EditIcon.vue";
 import DeleteIcon from "@/assets/icons/DeleteIcon.vue";
 import CloseIcon from "@/assets/icons/CloseIcon.vue";
-import DefaultMaterialImage from "@/assets/img/DefaultMaterialImage.jpg";
 
 const router = useRouter();
-const route = useRoute();
+const store = useChapterStore();
 const modal = ref(null);
 const modalTitle = ref("");
 const materialsForLessonsView = ref(null);
+const loading = ref(false);
+const file = ref(null);
+const chapter = reactive({
+  id: store.chapter.id,
+  description: "",
+  image: ""
+});
 
 const navigateToChaptersView = () => {
   router.push({ name: "materials" });
 };
 
+const reset = () => {
+  URL.revokeObjectURL(file.value);
+  file.value = null;
+  chapter.description = "";
+  chapter.image = "";
+};
+
 const showModal = (operation) => {
-  modalTitle.value = operation === "edit" ? "Edit lesson" : "Delete lesson";
+  reset();
+  modalTitle.value = operation === "edit" ? "Edit chapter" : "Delete chapter";
   modal.value.showModal();
 };
 
 const unshowModal = () => {
+  reset();
   modal.value.close();
+};
+
+const handleImageUploading = (event) => {
+  URL.revokeObjectURL(file.value);
+  file.value = null;
+
+  chapter.image = event.target.files[0];
+  file.value = URL.createObjectURL(chapter.image);
+
+  console.log(file.value);
+};
+
+const submitForm = async () => {
+  loading.value = true;
+
+  if (modalTitle.value === "Edit chapter") {
+    chapter.image = chapter.image ? chapter.image : store.chapter.image;
+
+    const response = await updateMaterials("chapter", chapter);
+
+    console.log(response);
+
+    if (response.status_code === 200) {
+      loading.value = false;
+
+      alert(`Chapter ${store.chapter.id} successfully updated!`);
+    }
+  } else {
+    const response = await deleteMaterials("chapter", store.chapter.id);
+
+    if (response === 200) {
+      loading.value = false;
+
+      alert(`Chapter ${store.chapter.id} successfully deleted!`);
+    }
+  }
+
+  loading.value = false;
+
+  unshowModal();
+
+  router.push({ name: "materials" });
 };
 </script>

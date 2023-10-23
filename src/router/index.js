@@ -19,7 +19,7 @@ const router = createRouter({
       meta: { requiresAuthentication: true }
     },
     {
-      path: "/materials/chapter/id=:id&number=:number&description=:description",
+      path: "/materials/chapter/:id",
       name: "materials-lessons",
       component: () => import("@/views/materials/partials/LessonsView.vue"),
       meta: { requiresAuthentication: true }

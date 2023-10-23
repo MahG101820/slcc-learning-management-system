@@ -6,15 +6,15 @@
       image="item.image"
       :title="`Chapter ${index + 1}`"
       :description="item.description"
-      @click="navigateToLessonsView(item.id, index + 1, item.description)"
+      @click="navigateToLessonsView(item, index + 1)"
     />
 
     <button
       @click="showModal"
       type="button"
-      class="border-gray-300 bg-gray-100 text-gray-700 col-span-3 h-64 border rounded-lg grid place-items-center"
+      class="border-gray-300 bg-gray-100 text-gray-700 col-span-3 h-64 text-xl font-bold border rounded-lg grid place-items-center"
     >
-      <p class="text-xl font-bold">Create new chapter</p>
+      Create new chapter
     </button>
   </section>
 
@@ -62,18 +62,14 @@
           for="image"
           class="border-emerald-600 bg-emerald-600 text-gray-100 w-max px-4 py-2 border rounded-lg flex items-center gap-4 cursor-pointer"
         >
-          <p>Upload image</p>
+          Upload image
         </label>
       </div>
 
       <div class="flex items-center justify-end gap-2">
-        <NeutralButton @click="unshowModal">
-          <p>Cancel</p>
-        </NeutralButton>
+        <NeutralButton @click="unshowModal"> Cancel </NeutralButton>
 
-        <PrimaryButton type="submit" :disabled="loading">
-          <p>Create</p>
-        </PrimaryButton>
+        <PrimaryButton :disabled="loading" type="submit"> Create </PrimaryButton>
       </div>
     </form>
   </dialog>
@@ -82,8 +78,9 @@
 <script setup>
 import { ref, reactive, watchEffect } from "vue";
 import { useRouter } from "vue-router";
-import { readMaterials } from "@/api/materials";
-import { uploadImage } from "@/firebase/storage";
+import { createMaterials, readMaterials } from "@/api/materials";
+import { uploadImage, downloadImage } from "@/firebase/storage";
+import { useChapterStore } from "@/stores/chapter";
 
 import MaterialCard from "@/components/MaterialCard.vue";
 import PrimaryButton from "@/components/PrimaryButton.vue";
@@ -95,6 +92,7 @@ import DefaultMaterialImage from "@/assets/img/DefaultMaterialImage.jpg";
 
 const router = useRouter();
 const chapters = await readMaterials("chapter");
+const store = useChapterStore();
 const modal = ref(null);
 const file = ref(null);
 const loading = ref(false);
@@ -103,10 +101,19 @@ const chapter = reactive({
   image: DefaultMaterialImage
 });
 
-const navigateToLessonsView = (chapterId, chapterNumber, chapterDescription) => {
+const navigateToLessonsView = (chapter, index) => {
+  store.reset();
+
+  store.chapter = {
+    id: chapter.id,
+    number: index,
+    description: chapter.description,
+    image: chapter.image
+  };
+
   router.push({
     name: "materials-lessons",
-    params: { id: chapterId, number: chapterNumber, description: chapterDescription }
+    params: { id: index }
   });
 };
 
@@ -136,22 +143,42 @@ const handleImageUploading = (event) => {
 };
 
 const submitForm = async () => {
-  loading.value = true;
-
-  const response = await uploadImage(chapter.image, "chapters/test");
   const result = ref(null);
 
+  loading.value = true;
+
+  if (typeof chapter.image === "string") {
+    chapter.image = new File([DefaultMaterialImage], "DefaultMaterialImage.jpg", {
+      type: "image/jpeg"
+    });
+  }
+
+  const response = await uploadImage(chapter.image, `chapters/chapter${chapters.length + 1}`);
   result.value = response;
 
-  watchEffect(() => {
-    if (result.value) {
-      loading.value = false;
+  watchEffect(async () => {
+    if (result.value === "success") {
+      const imageUrl = await downloadImage(`chapters/chapter${chapters.length + 1}`);
+
+      chapter.image = imageUrl;
+
+      const response = await createMaterials("chapter", chapter);
+
+      if (response.status_code === 200) {
+        loading.value = false;
+        result.value = null;
+
+        alert(
+          `New chapter successfully created! \nChapter ${chapters.length + 1}: ${
+            chapter.description
+          }`
+        );
+
+        unshowModal();
+
+        router.go(0);
+      }
     }
-
-    result.value = null;
-    unshowModal();
-
-    alert("Successfully uploaded image");
   });
 };
 </script>

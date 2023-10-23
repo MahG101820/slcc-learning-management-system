@@ -2,24 +2,27 @@ const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const headers = new Headers();
 const formData = new FormData();
 
-headers.append("Content-Type", "multipart/form-data");
+// headers.append("Content-Type", "application/json");
 headers.append("Accept", "application/json");
-headers.append("Authorization", "token");
+headers.append("Authorization", "Bearer 387|6q5RGtSmpPXZbjBjjtVeJyGND3soWHGWs8xFEBGD");
 
 const createMaterials = async (material, form) => {
   try {
-    formData.append("description", form.description);
-    formData.append("image", form.image);
+    const { description, image } = form;
 
-    const url = new URL(`${baseUrl}/get-${material}`);
-    const response = await fetch(url, { method: "POST", headers: headers, body: formData });
+    formData.append("user_id", 1);
+    formData.append("description", description);
+    formData.append("image", image);
+
+    const url = new URL(`${baseUrl}/insert-${material}`);
+    const response = await fetch(url, { method: "POST", body: formData });
 
     if (response.ok) {
-      formData.clear();
+      for (const key of formData.keys()) {
+        formData.delete(key);
+      }
 
       const result = await response.json();
-      console.log(response);
-      console.log(result);
       return result;
     }
   } catch (error) {
@@ -45,13 +48,22 @@ const readMaterials = async (material) => {
   }
 };
 
-const updateMaterials = async (material) => {
+const updateMaterials = async (material, form) => {
   try {
-    const url = new URL(`${baseUrl}/get-${material}`);
+    const { id, description, image } = form;
+
+    formData.append("user_id", 0);
+    formData.append("description", description);
+    formData.append("image", image);
+
+    const url = new URL(`${baseUrl}/update-${material}/id=${id}`);
     const response = await fetch(url, { method: "POST", headers, body: formData });
 
     if (response.ok) {
-      formData.clear();
+      for (const key of formData.keys()) {
+        formData.delete(key);
+      }
+
       const data = await response.json();
       return data;
     }
@@ -60,13 +72,12 @@ const updateMaterials = async (material) => {
   }
 };
 
-const deleteMaterials = async (material) => {
+const deleteMaterials = async (material, id) => {
   try {
-    const url = new URL(`${baseUrl}/get-${material}`);
-    const response = await fetch(url, { method: "POST", headers, body: formData });
+    const url = new URL(`${baseUrl}/delete/${material}/${id}`);
+    const response = await fetch(url);
 
     if (response.ok) {
-      formData.clear();
       const data = await response.json();
       return data;
     }

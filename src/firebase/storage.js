@@ -1,4 +1,4 @@
-import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { app } from "@/firebase/configuration";
 
 const storage = getStorage(app);
@@ -11,4 +11,10 @@ const uploadImage = async (image, pointer) => {
   return response.state;
 };
 
-export { uploadImage };
+const downloadImage = async (pointer) => {
+  const imageRef = createStorageRef(pointer);
+  const response = await getDownloadURL(imageRef);
+  return response;
+};
+
+export { uploadImage, downloadImage };
