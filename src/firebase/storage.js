@@ -1,4 +1,10 @@
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  deleteObject
+} from "firebase/storage";
 import { app } from "@/firebase/configuration";
 
 const storage = getStorage(app);
@@ -17,4 +23,10 @@ const downloadImage = async (pointer) => {
   return response;
 };
 
-export { uploadImage, downloadImage };
+const deleteImage = async (pointer) => {
+  const imageRef = createStorageRef(pointer);
+  const response = await deleteObject(imageRef);
+  return response;
+};
+
+export { uploadImage, downloadImage, deleteImage };

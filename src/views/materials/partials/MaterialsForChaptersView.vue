@@ -112,7 +112,7 @@ const navigateToLessonsView = (chapter, index) => {
   };
 
   router.push({
-    name: "materials-lessons",
+    name: "materials-chapter",
     params: { id: index }
   });
 };

@@ -20,12 +20,12 @@ const router = createRouter({
     },
     {
       path: "/materials/chapter/:id",
-      name: "materials-lessons",
+      name: "materials-chapter",
       component: () => import("@/views/materials/partials/LessonsView.vue"),
       meta: { requiresAuthentication: true }
     },
     {
-      path: "/materials/lesson/id=:id&number=:number&description=:description",
+      path: "/materials/lesson/:id",
       name: "materials-lesson",
       component: () => import("@/views/materials/partials/ReadLessonView.vue"),
       meta: { requiresAuthentication: true }
@@ -81,7 +81,7 @@ router.afterEach((to) => {
     width: link.getBoundingClientRect().width
   }));
 
-  const activeRouteName = ["materials-lessons", "materials-lesson"].includes(to.name)
+  const activeRouteName = ["materials-chapter", "materials-lesson"].includes(to.name)
     ? "materials"
     : to.name;
 

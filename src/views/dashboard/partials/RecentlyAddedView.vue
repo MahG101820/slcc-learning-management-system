@@ -2,40 +2,58 @@
   <div class="border-gray-300 bg-gray-100 text-gray-700 border rounded-lg flex flex-col">
     <img
       @error="handleErrorOnLoading(`chapter`)"
-      :src="recentlyAddedChapter.image"
+      :src="recentlyAdded.chapter.image"
       alt="Recently added chapter's image"
       class="bg-gray-300 w-full aspect-video object-cover rounded-t-lg"
     />
 
     <div class="p-4 flex items-center justify-between gap-4">
-      <div class="flex-1 grid">
-        <p class="font-semibold truncate">{{ `Chapter ${recentlyAddedChapter.number}` }}</p>
-        <p class="text-sm truncate">{{ recentlyAddedChapter.description }}</p>
-      </div>
+      <template v-if="recentlyAdded.chapter.id === 0">
+        <div class="flex-1 grid">
+          <p class="font-semibold truncate">Oops! No Chapter(s) Found</p>
+          <p class="text-sm truncate">It seems like there is no currently available chapter(s).</p>
+        </div>
+      </template>
 
-      <PrimaryButton @click="navigateToRecentlyAddedChapter"> View lessons </PrimaryButton>
+      <template v-else>
+        <div class="flex-1 grid">
+          <p class="font-semibold truncate">{{ `Chapter ${recentlyAdded.chapter.number}` }}</p>
+          <p class="text-sm truncate">{{ recentlyAdded.chapter.description }}</p>
+        </div>
+
+        <PrimaryButton @click="navigateToRecentlyAddedChapter"> View lessons </PrimaryButton>
+      </template>
     </div>
   </div>
 
   <div class="border-gray-300 bg-gray-100 text-gray-700 border rounded-lg flex flex-col">
     <img
       @error="handleErrorOnLoading(`lesson`)"
-      :src="recentlyAddedLesson.image"
+      :src="recentlyAdded.lesson.image"
       alt="Recently added lesson's image"
       class="bg-gray-300 w-full aspect-video object-cover rounded-t-lg"
     />
 
     <div class="my-auto px-4 flex items-center justify-between gap-4">
-      <div class="flex-1 grid">
-        <p class="font-semibold truncate">
-          {{
-            `Chapter ${recentlyAddedLesson.chapter.number}: Lesson ${recentlyAddedLesson.number}`
-          }}
-        </p>
-        <p class="text-sm truncate">{{ recentlyAddedLesson.description }}</p>
-      </div>
+      <template v-if="recentlyAdded.lesson.id === 0">
+        <div class="flex-1 grid">
+          <p class="font-semibold truncate">Oops! No Lesson(s) Found</p>
+          <p class="text-sm truncate">It seems like there is no currently available lesson(s).</p>
+        </div>
+      </template>
 
-      <PrimaryButton @click="navigateToRecentlyAddedLesson"> Read lesson </PrimaryButton>
+      <template v-else>
+        <div class="flex-1 grid">
+          <p class="font-semibold truncate">
+            {{
+              `Chapter ${recentlyAdded.lesson.chapterNumber}: Lesson ${recentlyAdded.lesson.number}`
+            }}
+          </p>
+          <p class="text-sm truncate">{{ recentlyAdded.lesson.description }}</p>
+        </div>
+
+        <PrimaryButton @click="navigateToRecentlyAddedLesson"> Read lesson </PrimaryButton>
+      </template>
     </div>
   </div>
 </template>
@@ -44,87 +62,117 @@
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
 import { readMaterials } from "@/api/materials";
+import { useChapterStore } from "@/stores/chapter";
 import { useReadingStore } from "@/stores/reading";
 
 import PrimaryButton from "@/components/PrimaryButton.vue";
 import ImagePlaceholder from "@/assets/img/ImagePlaceholder.jpg";
 
 const router = useRouter();
-const store = useReadingStore();
+const chapterStore = useChapterStore();
+const readingStore = useReadingStore();
+const recentlyAdded = reactive({
+  chapter: {
+    id: 0,
+    number: 0,
+    description: "",
+    image: 0
+  },
 
-// get recently added chapter
-const recentlyAddedChapter = reactive({});
-const chapters = await readMaterials("chapter");
-const chapter = chapters[chapters.length - 1];
+  lesson: {
+    chapterId: 0,
+    chapterNumber: 0,
+    chapterDescription: "",
 
-// assigning values to recently added chapter variable
-recentlyAddedChapter.id = chapter.id;
-recentlyAddedChapter.number = chapters.length;
-recentlyAddedChapter.description = chapter.description;
-recentlyAddedChapter.image = chapter.image;
+    id: 0,
+    number: 0,
+    description: "",
+    image: "",
+    content: ""
+  }
+});
 
-// get recently added lesson
-const recentlyAddedLesson = reactive({});
-const lessons = await readMaterials("lesson");
-const lesson = lessons[lessons.length - 1];
+const chaptersList = await readMaterials("chapter");
 
-// assigning values to recently added lesson variable
-recentlyAddedLesson.id = lesson.id;
-recentlyAddedLesson.chapter = {
-  id: lesson.chapter_id,
-  number: chapters.findIndex((key) => key.id === lesson.chapter_id) + 1,
-  description: chapters.find((key) => key.id === lesson.chapter_id).description
-};
-recentlyAddedLesson.number = lessons.filter((key) => key.chapter_id === lesson.chapter_id).length;
-recentlyAddedLesson.description = lesson.description;
-recentlyAddedLesson.image = lesson.image;
-recentlyAddedLesson.content = lesson.content;
+if (chaptersList.length) {
+  const chapter = chaptersList[chaptersList.length - 1];
 
-// handle error on loading images
+  recentlyAdded.chapter = {
+    id: chapter.id,
+    number: chaptersList.length,
+    description: chapter.description,
+    image: chapter.image
+  };
+
+  const response = await readMaterials("lesson");
+  const lessonsList = response.filter(
+    (key) => key.description !== null && chaptersList.map((chapter) => chapter.id).includes(key.id)
+  );
+
+  if (lessonsList.length) {
+    const lesson = Array.from(lessonsList[lessonsList.length - 1]);
+
+    recentlyAdded.lesson = {
+      chapterId: lesson.chapter_id,
+      chapterNumber: chaptersList.findIndex((key) => key.id === lesson.chapter_id) + 1,
+      chapterDescription: chaptersList.find((key) => key.id === lesson.chapter_id).description,
+
+      id: lesson.id,
+      number: lessonsList.filter((key) => key.chapter_id === lesson.chapter_id).length,
+      description: lesson.description,
+      image: lesson.image,
+      content: lesson.content
+    };
+  }
+}
+
 const handleErrorOnLoading = (source) => {
   if (source === "chapter") {
-    recentlyAddedChapter.image = ImagePlaceholder;
+    recentlyAdded.chapter.image = ImagePlaceholder;
   } else {
-    recentlyAddedLesson.image = ImagePlaceholder;
+    recentlyAdded.lesson.image = ImagePlaceholder;
   }
 };
 
-// navigate to recently added chapter
 const navigateToRecentlyAddedChapter = () => {
+  chapterStore.reset();
+
+  chapterStore.chapter = {
+    id: recentlyAdded.chapter.id,
+    number: recentlyAdded.chapter.number,
+    description: recentlyAdded.chapter.description,
+    image: recentlyAdded.chapter.image
+  };
+
   router.push({
-    name: "materials-lessons",
+    name: "materials-chapter",
     params: {
-      id: recentlyAddedChapter.id,
-      number: recentlyAddedChapter.number,
-      description: recentlyAddedChapter.description
+      id: recentlyAdded.chapter.number
     }
   });
 };
 
-// navigate to recently added lesson
 const navigateToRecentlyAddedLesson = () => {
-  store.reset();
+  readingStore.reset();
 
-  store.reading.chapter = {
-    id: recentlyAddedLesson.chapter.id,
-    number: recentlyAddedLesson.chapter.number,
-    description: recentlyAddedLesson.chapter.description
+  readingStore.reading.chapter = {
+    id: recentlyAdded.lesson.chapterId,
+    number: recentlyAdded.lesson.chapterNumber,
+    description: recentlyAdded.lesson.chapterDescription
   };
 
-  store.reading.lesson = {
-    id: recentlyAddedLesson.id,
-    number: recentlyAddedLesson.number,
-    description: recentlyAddedLesson.description,
-    image: recentlyAddedLesson.image,
-    content: recentlyAddedLesson.content
+  readingStore.reading.lesson = {
+    id: recentlyAdded.lesson.id,
+    number: recentlyAdded.lesson.number,
+    description: recentlyAdded.lesson.description,
+    image: recentlyAdded.lesson.image,
+    content: recentlyAdded.lesson.content
   };
 
   router.push({
     name: "materials-lesson",
     params: {
-      id: recentlyAddedLesson.id,
-      number: recentlyAddedLesson.number,
-      description: recentlyAddedLesson.description
+      id: recentlyAdded.lesson.number
     }
   });
 };

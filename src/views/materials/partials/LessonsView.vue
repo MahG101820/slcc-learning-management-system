@@ -40,7 +40,7 @@
     >
       <div class="flex items-start justify-between gap-4">
         <div>
-          <p class="font-bold uppercase truncate">Create new chapter</p>
+          <p class="font-bold uppercase truncate">{{ modalTitle }}</p>
           <p class="text-xs">
             {{ `Chapter ${store.chapter.number}: ${store.chapter.description}` }}
           </p>
@@ -52,7 +52,7 @@
       </div>
 
       <div v-if="modalTitle === `Edit chapter`" class="space-y-2">
-        <InputText v-model.trim="chapter.description" id="title" label="Description" required />
+        <InputText v-model.trim="chapter.description" id="title" label="Description" />
 
         <input
           @change="handleImageUploading"
@@ -64,6 +64,7 @@
         />
 
         <img
+          @error="handleErrorOnLoading"
           :src="file ? file : store.chapter.image"
           alt="Material image"
           class="bg-gray-200 w-full aspect-video rounded-lg object-cover object-center"
@@ -106,7 +107,7 @@
 <script setup>
 import { useRouter } from "vue-router";
 import { ref, reactive, watchEffect } from "vue";
-import { uploadImage, downloadImage } from "@/firebase/storage";
+import { uploadImage, downloadImage, deleteImage } from "@/firebase/storage";
 import { updateMaterials, deleteMaterials } from "@/api/materials";
 import { useChapterStore } from "@/stores/chapter";
 
@@ -119,6 +120,7 @@ import ChevronLeftIcon from "@/assets/icons/ChevronLeftIcon.vue";
 import EditIcon from "@/assets/icons/EditIcon.vue";
 import DeleteIcon from "@/assets/icons/DeleteIcon.vue";
 import CloseIcon from "@/assets/icons/CloseIcon.vue";
+import ImagePlaceholder from "@/assets/img/ImagePlaceholder.jpg";
 
 const router = useRouter();
 const store = useChapterStore();
@@ -130,7 +132,7 @@ const file = ref(null);
 const chapter = reactive({
   id: store.chapter.id,
   description: "",
-  image: ""
+  image: ImagePlaceholder
 });
 
 const navigateToChaptersView = () => {
@@ -155,55 +157,69 @@ const unshowModal = () => {
   modal.value.close();
 };
 
+const handleErrorOnLoading = () => {
+  chapter.image = ImagePlaceholder;
+};
+
 const handleImageUploading = (event) => {
   URL.revokeObjectURL(file.value);
   file.value = null;
 
   chapter.image = event.target.files[0];
   file.value = URL.createObjectURL(chapter.image);
+
+  console.log(chapter.image);
+  console.log(file.value);
 };
 
 const submitForm = async () => {
   const result = ref(null);
-
   loading.value = true;
 
-  const response = await uploadImage(chapter.image, `chapters/chapter${store.chapter.number}`);
-  result.value = response;
+  if (modalTitle.value === "Edit chapter") {
+    if (chapter.image) {
+      const response = await uploadImage(chapter.image, `chapters/chapter${store.chapter.number}`);
+      result.value = response;
 
-  watchEffect(async () => {
-    if (result.value === "success") {
-      const imageUrl = await downloadImage(`chapters/chapter${store.chapter.number}}`);
-
-      chapter.image = imageUrl;
-
-      if (modalTitle.value === "Edit chapter") {
-        chapter.image = chapter.image ? chapter.image : store.chapter.image;
-
-        const response = await updateMaterials("chapter", chapter);
-
-        if (response.status_code === 200) {
-          loading.value = false;
-
-          alert(`Chapter ${store.chapter.id} successfully updated!`);
+      watchEffect(async () => {
+        if (result.value === "success") {
+          const imageUrl = await downloadImage(`chapters/chapter${store.chapter.number}`);
+          chapter.image = imageUrl;
         }
-      } else {
+      });
+    }
+
+    chapter.description = chapter.description ? chapter.description : store.chapter.description;
+
+    const response = await updateMaterials("chapter", chapter);
+
+    if (response.status_code === 200) {
+      alert(`Chapter ${store.chapter.id} successfully updated!`);
+    }
+  } else {
+    const response = await deleteImage(`chapters/chapter${store.chapter.number}`);
+    result.value = response;
+
+    console.log(response);
+
+    watchEffect(async () => {
+      if (result.value === "success") {
         const response = await deleteMaterials("chapter", store.chapter.id);
 
-        if (response === 200) {
-          loading.value = false;
+        console.log(response);
 
+        if (response === 200) {
           alert(`Chapter ${store.chapter.id} successfully deleted!`);
         }
       }
+    });
+  }
 
-      loading.value = false;
-      result.value = null;
+  loading.value = false;
+  result.value = null;
 
-      unshowModal();
+  unshowModal();
 
-      router.push({ name: "materials" });
-    }
-  });
+  router.push({ name: "materials" });
 };
 </script>
