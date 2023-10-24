@@ -78,7 +78,7 @@
 
       <div>
         <p class="font-medium uppercase">Leaderboard</p>
-        <p class="text-gray-600 text-xs">Current rank</p>
+        <p class="text-gray-600 text-xs">Students on leaderboard</p>
       </div>
     </div>
 
@@ -111,7 +111,4 @@ const quizzes = quizzesList.length;
 
 const leaderboardList = await readLeaderboard();
 const leaderboard = leaderboardList.length;
-
-console.log(leaderboardList)
-console.log(leaderboardList)
 </script>

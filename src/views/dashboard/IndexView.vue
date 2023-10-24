@@ -15,7 +15,7 @@
         </div>
 
         <div class="col-span-8 row-span-2 p-4 flex flex-col gap-4">
-          <p class="text-xl font-bold uppercase">Top students on leaderboards</p>
+          <p class="text-xl font-bold uppercase">Top students on leaderboard</p>
 
           <div class="flex-1 grid grid-flow-col grid-cols-3 gap-2">
             <TopStudentsView />
