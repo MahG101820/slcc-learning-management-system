@@ -6,15 +6,15 @@ export const useProfileStore = defineStore(
   () => {
     const profile = reactive({
       id: "",
-      name: "",
+      fname: "",
+      mname: "",
+      lname: "",
       email: "",
       type: "",
       token: ""
     });
 
-    const reset = () => {
-      
-    };
+    const reset = () => {};
 
     return {
       profile,

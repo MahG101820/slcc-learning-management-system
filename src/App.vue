@@ -1,8 +1,14 @@
 <template>
   <TheNavbar v-if="navbarVisibility" />
 
-  <main class="p-3 flex-1 overflow-hidden">
-    <div class="max-w-screen-xl h-full max-h-[40rem] mx-auto p-1 overflow-x-auto">
+  <main :class="route.name === `login` ? `` : `p-3 flex-1 overflow-hidden`">
+    <div
+      :class="
+        route.name === `login`
+          ? ``
+          : `max-w-screen-xl h-full max-h-[40rem] mx-auto p-1 overflow-x-auto`
+      "
+    >
       <RouterView />
     </div>
   </main>

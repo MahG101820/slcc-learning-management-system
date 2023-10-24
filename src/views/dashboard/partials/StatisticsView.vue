@@ -5,7 +5,7 @@
     <div class="relative">
       <img
         @error="handleErrorOnFetching"
-        :src="imageSource"
+        :src="store.profile.image"
         alt="Profile picture"
         class="border-emerald-600 bg-gray-300 w-32 aspect-square border-4 rounded-full object-cover object-center"
       />
@@ -13,17 +13,23 @@
       <p
         class="border-gray-100 bg-emerald-600 text-gray-100 w-8 aspect-square text-xs border-4 rounded-full grid place-items-center absolute left-2 bottom-0"
       >
-        S
+        {{ store.profile.type.toUpperCase().charAt(0) }}
       </p>
     </div>
 
     <div class="text-center grid">
-      <p class="font-medium uppercase truncate">Nikola Tesla</p>
+      <p class="font-medium uppercase truncate">
+        {{
+          `${store.profile.fname} ${store.profile.mname ? store.profile.mname : ``} ${
+            store.profile.lname
+          }`
+        }}
+      </p>
 
       <p
         class="border-gray-300/50 bg-gray-200/50 text-gray-800 w-max mx-auto px-2 py-1 text-xs truncate border rounded-full"
       >
-        nikolatesla@gmail.com
+        {{ store.profile.email }}
       </p>
     </div>
   </div>
@@ -91,11 +97,14 @@ import { ref } from "vue";
 import { readMaterials } from "@/api/materials";
 import { readQuizzes } from "@/api/quizzes";
 import { readLeaderboard } from "@/api/leaderboard";
+import { useProfileStore } from "@/stores/profile";
 
 import MaterialsIcon from "@/assets/icons/MaterialsIcon.vue";
 import QuizzesIcon from "@/assets/icons/QuizzesIcon.vue";
 import LeaderboardIcon from "@/assets/icons/LeaderboardIcon.vue";
 import ImagePlaceholder from "@/assets/img/ImagePlaceholder.jpg";
+
+const store = useProfileStore();
 
 const imageSource = ref(
   "https://img.freepik.com/free-vector/nikola-tesla-cartoon-character-white-background_1308-81627.jpg?w=826&t=st=1697682902~exp=1697683502~hmac=2014106291a496e2aa4874f0449edd49f14d27764f4740273806aaf1665b1f76"
