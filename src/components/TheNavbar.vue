@@ -33,7 +33,7 @@
           </li>
         </ul>
 
-        <PrimaryButton> Sign out </PrimaryButton>
+        <PrimaryButton @click="logoutAccount"> Logout </PrimaryButton>
       </div>
     </nav>
   </header>
@@ -87,14 +87,16 @@
         </li>
       </ul>
 
-      <PrimaryButton> Sign out </PrimaryButton>
+      <PrimaryButton @click="logoutAccount"> Logout </PrimaryButton>
     </nav>
   </aside>
 </template>
 
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import { RouterLink } from "vue-router";
+import { useProfileStore } from "@/stores/profile";
 
 import IconedButton from "@/components/IconedButton.vue";
 import PrimaryButton from "@/components/PrimaryButton.vue";
@@ -130,9 +132,17 @@ const links = [
   }
 ];
 
+const router = useRouter();
+const store = useProfileStore();
 const sidebarVisibility = ref(false);
 
 const setSidebarVisibility = () => (sidebarVisibility.value = !sidebarVisibility.value);
+
+const logoutAccount = () => {
+  store.reset();
+  localStorage.clear();
+  router.push({ name: "login" }).then(() => router.go(0));
+};
 </script>
 
 <style lang="postcss" scoped>

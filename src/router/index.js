@@ -79,6 +79,25 @@ const router = createRouter({
   ]
 });
 
+router.beforeEach((to, _, next) => {
+  const storedProfile = JSON.parse(localStorage.getItem("profile"));
+  const requiresAuthentication = to.meta.requiresAuthentication;
+  const isAdmin = storedProfile ? (storedProfile.type === "administrator" ? true : false) : false;
+
+  if (isAdmin && to.name !== "administrator") {
+    localStorage.clear();
+    window.location.reload();
+  }
+
+  if (requiresAuthentication && !storedProfile) {
+    next({ name: "login" });
+  } else if (to.name === "login" && storedProfile) {
+    next({ name: "dashboard" });
+  } else {
+    next();
+  }
+});
+
 router.afterEach((to) => {
   const linksList = Array.from(document.querySelectorAll("header ul a"));
 

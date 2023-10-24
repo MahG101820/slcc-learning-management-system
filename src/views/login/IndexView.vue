@@ -221,7 +221,9 @@ const signInAccount = async () => {
         token: `Bearer ${response.token}`
       };
 
-      router.push({ name: "dashboard" });
+      localStorage.setItem("profile", JSON.stringify(store.profile));
+
+      router.push({ name: "dashboard" }).then(() => router.go(0));
     } else {
       isErrorMessageVisible.value = true;
       errorMassage.value =
