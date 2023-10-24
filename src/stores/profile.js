@@ -12,13 +12,16 @@ export const useProfileStore = defineStore(
       token: ""
     });
 
-    const reset = () => {};
+    const reset = () => {
+      
+    };
 
     return {
       profile,
       reset
     };
   },
+
   {
     persist: true
   }

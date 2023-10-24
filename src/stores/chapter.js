@@ -9,7 +9,7 @@ export const useChapterStore = defineStore(
       id: 0,
       number: 0,
       description: "",
-      image: ""
+      image: null
     });
 
     const reset = () => {
@@ -20,9 +20,5 @@ export const useChapterStore = defineStore(
     };
 
     return { chapter, reset };
-  },
-
-  {
-    persist: true
   }
 );

@@ -148,9 +148,9 @@ const submitForm = async () => {
   loading.value = true;
 
   if (typeof chapter.image === "string") {
-    chapter.image = new File([DefaultMaterialImage], "DefaultMaterialImage.jpg", {
-      type: "image/jpeg"
-    });
+    const response = await fetch(DefaultMaterialImage);
+    const result = await response.blob();
+    chapter.image = result;
   }
 
   const response = await uploadImage(chapter.image, `chapters/chapter${chapters.length + 1}`);

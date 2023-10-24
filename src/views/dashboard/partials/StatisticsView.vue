@@ -44,7 +44,7 @@
       </div>
     </div>
 
-    <p class="mr-2 text-4xl font-bold">0</p>
+    <p class="mr-2 text-4xl font-bold">{{ chapters }}</p>
   </div>
 
   <div
@@ -63,7 +63,7 @@
       </div>
     </div>
 
-    <p class="mr-2 text-4xl font-bold">0</p>
+    <p class="mr-2 text-4xl font-bold">{{ quizzes }}</p>
   </div>
 
   <div
@@ -82,12 +82,15 @@
       </div>
     </div>
 
-    <p class="mr-2 text-4xl font-bold">0</p>
+    <p class="mr-2 text-4xl font-bold">{{ leaderboard }}</p>
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
+import { readMaterials } from "@/api/materials";
+import { readQuizzes } from "@/api/quizzes";
+import { readLeaderboard } from "@/api/leaderboard";
 
 import MaterialsIcon from "@/assets/icons/MaterialsIcon.vue";
 import QuizzesIcon from "@/assets/icons/QuizzesIcon.vue";
@@ -99,4 +102,16 @@ const imageSource = ref(
 );
 
 const handleErrorOnFetching = () => (imageSource.value = ImagePlaceholder);
+
+const chaptersList = await readMaterials("chapter");
+const chapters = chaptersList.length;
+
+const quizzesList = await readQuizzes();
+const quizzes = quizzesList.length;
+
+const leaderboardList = await readLeaderboard();
+const leaderboard = leaderboardList.length;
+
+console.log(leaderboardList)
+console.log(leaderboardList)
 </script>

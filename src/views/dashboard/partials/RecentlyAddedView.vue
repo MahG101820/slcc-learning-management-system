@@ -106,11 +106,12 @@ if (chaptersList.length) {
 
   const response = await readMaterials("lesson");
   const lessonsList = response.filter(
-    (key) => key.description !== null && chaptersList.map((chapter) => chapter.id).includes(key.id)
+    (key) =>
+      key.description !== null && chaptersList.map((chapter) => chapter.id).includes(key.chapter_id)
   );
 
   if (lessonsList.length) {
-    const lesson = Array.from(lessonsList[lessonsList.length - 1]);
+    const lesson = lessonsList[lessonsList.length - 1];
 
     recentlyAdded.lesson = {
       chapterId: lesson.chapter_id,

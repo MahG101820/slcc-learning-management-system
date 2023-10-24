@@ -57,7 +57,7 @@
         <input
           @change="handleImageUploading"
           type="file"
-          id="image"
+          id="imageForEditing"
           class="hidden"
           name="image"
           accept="image/png, image/jpeg"
@@ -71,7 +71,7 @@
         />
 
         <label
-          for="image"
+          for="imageForEditing"
           class="border-emerald-600 bg-emerald-600 text-gray-100 w-max px-4 py-2 border rounded-lg flex items-center gap-4 cursor-pointer"
         >
           Upload image
@@ -132,7 +132,7 @@ const file = ref(null);
 const chapter = reactive({
   id: store.chapter.id,
   description: "",
-  image: ImagePlaceholder
+  image: store.chapter.image
 });
 
 const navigateToChaptersView = () => {
@@ -143,7 +143,7 @@ const reset = () => {
   URL.revokeObjectURL(file.value);
   file.value = null;
   chapter.description = "";
-  chapter.image = "";
+  chapter.image = store.chapter.image;
 };
 
 const showModal = (operation) => {
@@ -167,9 +167,6 @@ const handleImageUploading = (event) => {
 
   chapter.image = event.target.files[0];
   file.value = URL.createObjectURL(chapter.image);
-
-  console.log(chapter.image);
-  console.log(file.value);
 };
 
 const submitForm = async () => {
@@ -177,7 +174,7 @@ const submitForm = async () => {
   loading.value = true;
 
   if (modalTitle.value === "Edit chapter") {
-    if (chapter.image) {
+    if (store.chapter.image !== chapter.image) {
       const response = await uploadImage(chapter.image, `chapters/chapter${store.chapter.number}`);
       result.value = response;
 
@@ -185,41 +182,63 @@ const submitForm = async () => {
         if (result.value === "success") {
           const imageUrl = await downloadImage(`chapters/chapter${store.chapter.number}`);
           chapter.image = imageUrl;
+
+          if (chapter.image) {
+            chapter.description = chapter.description
+              ? chapter.description
+              : store.chapter.description;
+
+            const response = await updateMaterials("chapter", chapter);
+
+            if (response.status_code === 200) {
+              alert(`Chapter ${store.chapter.id} successfully updated!`);
+            }
+          }
+
+          loading.value = false;
+          result.value = null;
+
+          unshowModal();
+          store.reset();
+          router.push({ name: "materials" });
         }
       });
-    }
+    } else {
+      chapter.description = chapter.description ? chapter.description : store.chapter.description;
 
-    chapter.description = chapter.description ? chapter.description : store.chapter.description;
+      const response = await updateMaterials("chapter", chapter);
 
-    const response = await updateMaterials("chapter", chapter);
+      if (response.status_code === 200) {
+        alert(`Chapter ${store.chapter.id} successfully updated!`);
+      }
 
-    if (response.status_code === 200) {
-      alert(`Chapter ${store.chapter.id} successfully updated!`);
+      loading.value = false;
+      result.value = null;
+
+      unshowModal();
+      store.reset();
+      router.push({ name: "materials" });
     }
   } else {
     const response = await deleteImage(`chapters/chapter${store.chapter.number}`);
     result.value = response;
 
-    console.log(response);
-
     watchEffect(async () => {
       if (result.value === "success") {
         const response = await deleteMaterials("chapter", store.chapter.id);
-
-        console.log(response);
 
         if (response === 200) {
           alert(`Chapter ${store.chapter.id} successfully deleted!`);
         }
       }
+
+      loading.value = false;
+      result.value = null;
+
+      unshowModal();
+      store.reset();
+      router.push({ name: "materials" });
     });
   }
-
-  loading.value = false;
-  result.value = null;
-
-  unshowModal();
-
-  router.push({ name: "materials" });
 };
 </script>

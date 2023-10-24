@@ -102,7 +102,7 @@ const navigateToReadLessonView = (lesson, index) => {
 
   router.push({
     name: "materials-lesson",
-    params: { id: lesson.id, number: index, description: lesson.description }
+    params: { id: index }
   });
 };
 

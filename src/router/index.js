@@ -31,6 +31,12 @@ const router = createRouter({
       meta: { requiresAuthentication: true }
     },
     {
+      path: "/materials/lesson/edit/:id/",
+      name: "materials-lesson-edit",
+      component: () => import("@/views/materials/partials/EditLessonView.vue"),
+      meta: { requiresAuthentication: true }
+    },
+    {
       path: "/quizzes",
       name: "quizzes",
       component: () => import("@/views/quizzes/IndexView.vue"),

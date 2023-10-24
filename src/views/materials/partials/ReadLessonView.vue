@@ -1,14 +1,14 @@
 <template>
   <section class="h-full space-y-4">
     <div class="flex items-center justify-between gap-2">
-      <PrimaryButton @click="navigateToLessonsView()">
+      <PrimaryButton @click="navigateToLessonsView">
         <ChevronLeftIcon />
 
-        <p>{{ `Lesson ${route.params.number}` }}</p>
+        <p>{{ `Lesson ${lesson.number}` }}</p>
       </PrimaryButton>
 
       <div v-if="chapter.id && lesson.id" class="flex items-center gap-2">
-        <IconedButton @click="showModal(`edit`)" class="bg-sky-600 text-gray-100">
+        <IconedButton @click="navigateToEditLessonView" class="bg-sky-600 text-gray-100">
           <EditIcon />
         </IconedButton>
 
@@ -50,7 +50,7 @@
     >
       <div class="flex items-start justify-between gap-4">
         <div>
-          <p class="font-bold uppercase truncate">{{ modalTitle }}</p>
+          <p class="font-bold uppercase truncate">Delete lesson</p>
           <p class="text-xs">
             {{ `Lesson ${lesson.number}: ${lesson.description}` }}
           </p>
@@ -61,30 +61,16 @@
         </IconedButton>
       </div>
 
-      <div v-if="modalTitle === `Edit lesson`" class="space-y-2">
-        <p>Edit lesson -></p>
-      </div>
-
-      <div v-else class="px-4">
-        <p class="font-semibold">Do you really want to delete this chapter?</p>
-        <p class="text-sm">
-          All lesson(s) in this chapter will also be deleted and it cannot be undone!
-        </p>
+      <div class="px-4">
+        <p class="font-semibold">Do you really want to delete this lesson?</p>
+        <p class="text-sm">This is permanent and it cannot be undone!</p>
       </div>
 
       <div class="flex items-center justify-end gap-2">
         <NeutralButton @click="unshowModal"> Cancel </NeutralButton>
 
-        <PrimaryButton
-          :disabled="loading"
-          type="submit"
-          :class="
-            modalTitle === `Edit lesson`
-              ? `border-emerald-600 bg-emerald-600`
-              : `border-rose-600 bg-rose-600`
-          "
-        >
-          {{ modalTitle === "Edit lesson" ? "Save" : "Delete" }}
+        <PrimaryButton :disabled="loading" type="submit" class="border-rose-600 bg-rose-600">
+          Delete
         </PrimaryButton>
       </div>
     </form>
@@ -93,20 +79,19 @@
 
 <script setup>
 import { ref, toRefs } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { useRouter } from "vue-router";
 import { useReadingStore } from "@/stores/reading";
 
 import PrimaryButton from "@/components/PrimaryButton.vue";
 import NeutralButton from "@/components/NeutralButton.vue";
 import IconedButton from "@/components/IconedButton.vue";
 import ChevronLeftIcon from "@/assets/icons/ChevronLeftIcon.vue";
+import CloseIcon from "@/assets/icons/CloseIcon.vue";
 import EditIcon from "@/assets/icons/EditIcon.vue";
 import DeleteIcon from "@/assets/icons/DeleteIcon.vue";
 
 const router = useRouter();
-const route = useRoute();
 const modal = ref(null);
-const modalTitle = ref();
 const store = useReadingStore();
 const { chapter, lesson } = toRefs(store.reading);
 
@@ -115,9 +100,11 @@ const navigateToLessonsView = () => {
   router.go(-1);
 };
 
-const showModal = (operation) => {
-  modalTitle.value = operation === "edit" ? "Edit lesson" : "Delete lesson";
+const navigateToEditLessonView = () => {
+  router.push({ name: "materials-lesson-edit" });
+};
 
+const showModal = () => {
   modal.value.showModal();
 };
 

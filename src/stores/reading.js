@@ -38,9 +38,5 @@ export const useReadingStore = defineStore(
     };
 
     return { reading, reset };
-  },
-
-  {
-    persist: true
   }
 );
