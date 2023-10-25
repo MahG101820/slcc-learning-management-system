@@ -115,7 +115,7 @@ const handleErrorOnFetching = () => (imageSource.value = ImagePlaceholder);
 const chaptersList = await readMaterials("chapter");
 const chapters = chaptersList.length;
 
-const quizzesList = await readQuizzes();
+const quizzesList = await readQuizzes(store.profile.id);
 const quizzes = quizzesList.length;
 
 const leaderboardList = await readLeaderboard();
