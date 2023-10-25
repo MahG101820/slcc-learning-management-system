@@ -43,6 +43,12 @@ const router = createRouter({
       meta: { requiresAuthentication: true }
     },
     {
+      path: "/quizzes/answer/:id/:number",
+      name: "quizzes-answer",
+      component: () => import("@/views/quizzes/partials/AnswerQuizzesView.vue"),
+      meta: { requiresAuthentication: true }
+    },
+    {
       path: "/leaderboard",
       name: "leaderboard",
       component: () => import("@/views/leaderboard/IndexView.vue"),

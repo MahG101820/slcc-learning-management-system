@@ -17,7 +17,11 @@
         <p
           class="border-gray-300 bg-gray-200 text-gray-800 flex-1 px-4 py-2 text-sm truncate border rounded-lg"
         >
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis, nihil.
+          {{
+            `${storedProfile.fname} ${storedProfile.mname ? storedProfile.mname : ``} ${
+              storedProfile.lname
+            }`
+          }}
         </p>
 
         <IconedButton @click="showModal(`name`)" class="bg-sky-600 text-gray-100">
@@ -112,6 +116,8 @@ import NeutralButton from "@/components/NeutralButton.vue";
 import InputText from "@/components/InputText.vue";
 import EditIcon from "@/assets/icons/EditIcon.vue";
 import CloseIcon from "@/assets/icons/CloseIcon.vue";
+
+const storedProfile = JSON.parse(localStorage.getItem("profile"));
 
 const modal = ref(null);
 const modalProperties = reactive({});

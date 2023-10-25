@@ -1,5 +1,5 @@
 <template>
-  <section class="h-full grid grid-cols-12 gap-x-2 gap-y-8">
+  <section v-if="chapters.length" class="h-full grid grid-cols-12 gap-x-2 gap-y-8">
     <MaterialCard
       v-for="(item, index) in chapters"
       :key="index"
@@ -10,6 +10,7 @@
     />
 
     <button
+      v-if="storedProfile.type === `teacher`"
       @click="showModal"
       type="button"
       class="border-gray-300 bg-gray-100 text-gray-700 col-span-3 h-64 text-xl font-bold border rounded-lg grid place-items-center"
@@ -17,6 +18,8 @@
       Create new chapter
     </button>
   </section>
+
+  <p v-else>No chapters found</p>
 
   <dialog ref="modal" class="bg-transparent">
     <form
@@ -89,6 +92,8 @@ import IconedButton from "@/components/IconedButton.vue";
 import InputText from "@/components/InputText.vue";
 import CloseIcon from "@/assets/icons/CloseIcon.vue";
 import DefaultMaterialImage from "@/assets/img/DefaultMaterialImage.jpg";
+
+const storedProfile = JSON.parse(localStorage.getItem("profile"));
 
 const router = useRouter();
 const chapters = await readMaterials("chapter");

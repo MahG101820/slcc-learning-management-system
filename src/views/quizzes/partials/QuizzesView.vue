@@ -2,6 +2,7 @@
   <button
     v-for="(item, index) in quizzes"
     :key="index"
+    @click="navigateToAnswerQuiz(item.id, index + 1, item.quiz_type)"
     type="button"
     class="border-stone-300 bg-stone-100 col-span-3 h-40 border rounded-lg"
   >
@@ -34,10 +35,53 @@
 </template>
 
 <script setup>
-import { readQuizzes } from "@/api/quizzes";
+import { useRouter } from "vue-router";
+import { readQuizzes, readQuizItems } from "@/api/quizzes";
 import { useProfileStore } from "@/stores/profile";
+import { useQuizStore } from "@/stores/quiz";
 
-const store = useProfileStore();
-const quizzesList = await readQuizzes(store.profile.id);
+const router = useRouter();
+const storeProfile = useProfileStore();
+const storeQuiz = useQuizStore();
+const quizzesList = await readQuizzes(storeProfile.profile.id);
 const quizzes = quizzesList.filter((key) => key.user_id !== null);
+const quiz = storeQuiz.quiz;
+
+const navigateToAnswerQuiz = async (id, number, type) => {
+  const response = await readQuizItems(id);
+  const textsList = [];
+  const imagesList = [];
+
+  response.detail.forEach((item) => {
+    textsList.push(
+      item.options.filter((_, index) => index % 2 === 0).map((key) => key.split("text:")[1].trim())
+    );
+  });
+
+  response.detail.forEach((item) => {
+    imagesList.push(
+      item.options.filter((_, index) => index % 2 !== 0).map((key) => key.split("image:")[1].trim())
+    );
+  });
+
+  storeQuiz.reset();
+
+  quiz.details = {
+    id: response.title_id,
+    title: response.title,
+    type: type,
+    questions: {
+      texts: response.detail.map((key) => key.questions.split(",")[0].slice(5).trim()),
+      images: response.detail.map((key) => key.questions.split(",")[1].slice(6).trim())
+    },
+    answers: response.detail.map((key) => key.answers),
+    options: {
+      texts: [...textsList],
+      images: [...imagesList]
+    }
+  };
+
+  localStorage.setItem(`quiz-${id}`, JSON.stringify(quiz));
+  router.push({ name: "quizzes-answer", params: { id: number, number: id } });
+};
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-12 gap-x-2 gap-y-8">
+  <div v-if="lessonsList.length" class="grid grid-cols-12 gap-x-2 gap-y-8">
     <MaterialCard
       v-for="(item, index) in lessonsList"
       :key="index"
@@ -10,6 +10,7 @@
     />
 
     <button
+      v-if="storedProfile.type === `teacher`"
       @click="showModal"
       type="button"
       class="border-gray-300 bg-gray-100 text-gray-700 col-span-3 h-64 border rounded-lg grid place-items-center"
@@ -17,6 +18,8 @@
       <p class="text-xl font-bold">Create new lesson</p>
     </button>
   </div>
+
+  <p v-else>No chapters found</p>
 
   <dialog ref="modal" class="bg-transparent">
     <form
@@ -80,6 +83,8 @@ const store = useChapterStore();
 const modal = ref(null);
 const lessons = await readMaterials("lesson");
 const lessonsList = lessons.filter((lesson) => lesson.chapter_id === store.chapter.id);
+
+const storedProfile = JSON.parse(localStorage.getItem("profile"));
 
 const navigateToReadLessonView = (lesson, index) => {
   const store = useReadingStore();
