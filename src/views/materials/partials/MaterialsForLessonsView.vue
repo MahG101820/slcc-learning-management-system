@@ -19,7 +19,7 @@
     </button>
   </div>
 
-  <p v-else>No chapters found</p>
+  <p v-else>No lessons found</p>
 
   <dialog ref="modal" class="bg-transparent">
     <form
