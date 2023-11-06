@@ -7,6 +7,7 @@ const defaultProfile = {
   mname: "",
   lname: "",
   email: "",
+  image: "",
   type: "",
   token: ""
 };
@@ -32,7 +33,7 @@ export const useProfileStore = defineStore(
   {
     persist: {
       storage: window.localStorage,
-      properties: ["id", "fname", "mname", "lname", "email", "type", "token"]
+      properties: ["id", "fname", "mname", "lname", "email", "image", "type", "token"]
     }
   }
 );

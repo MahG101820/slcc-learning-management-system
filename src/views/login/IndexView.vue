@@ -217,6 +217,7 @@ const signInAccount = async () => {
         mname: response.user.mname,
         lname: response.user.lname,
         email: response.user.user_id,
+        image: response.user.image,
         type: role,
         token: `Bearer ${response.token}`
       };
