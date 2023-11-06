@@ -94,8 +94,9 @@ router.beforeEach((to, _, next) => {
   if (profile.token && profile.type === "administrator") {
     if (requiresAuthentication || to.name === "login") {
       profileStore.reset();
-    }
-    next();
+      next();
+      router.go(0);
+    } else next();
   } else if (profile.token && profile.type !== "administrator") {
     if (to.name === "login") {
       next({ name: "dashboard" });
@@ -142,4 +143,3 @@ router.afterEach((to) => {
 });
 
 export default router;
- 
