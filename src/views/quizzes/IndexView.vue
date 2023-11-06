@@ -1,7 +1,7 @@
 <template>
   <Suspense>
     <template #default>
-      <section class="h-full grid grid-cols-12 gap-x-2 gap-y-4">
+      <section class="max-h-full grid grid-cols-12 gap-x-2 gap-y-4">
         <QuizzesView />
       </section>
     </template>

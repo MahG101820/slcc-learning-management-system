@@ -47,7 +47,15 @@ const updateQuizScore = async (id, quizId, score) => {
       body: formData
     });
 
+    const answeredQuizzes = JSON.parse(localStorage.getItem("answered-quizzes"));
+
     if (response.ok) {
+      if (answeredQuizzes) {
+        localStorage.setItem("answered-quizzes", JSON.stringify([...answeredQuizzes, quizId]));
+      } else {
+        localStorage.setItem("answered-quizzes", JSON.stringify([quizId]));
+      }
+
       const data = await response.json();
       return data;
     }

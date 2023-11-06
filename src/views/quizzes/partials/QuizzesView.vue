@@ -4,7 +4,7 @@
     :key="index"
     @click="navigateToAnswerQuiz(item.id, index + 1, item.quiz_type)"
     type="button"
-    class="border-stone-300 bg-stone-100 col-span-3 h-40 border rounded-lg"
+    class="border-stone-300 bg-stone-100 col-span-3 h-40 border rounded-lg transition-all hover:border-emerald-600 hover:scale-95 hover:shadow-lg"
   >
     <div class="bg-emerald-600 text-stone-100 h-12 rounded-t-lg grid place-items-center">
       <p class="text-xl font-bold uppercase">{{ `Quiz ${index + 1}` }}</p>
@@ -29,7 +29,10 @@
     </div>
   </button>
 
-  <button type="button" class="border-stone-300 bg-stone-100 col-span-3 h-40 border rounded-lg">
+  <button
+    type="button"
+    class="border-stone-300 bg-stone-100 col-span-3 h-40 border rounded-lg transition-all hover:border-emerald-600 hover:scale-95 hover:shadow-lg"
+  >
     <p class="text-xl font-medium">Add new quiz</p>
   </button>
 </template>
@@ -44,8 +47,14 @@ const router = useRouter();
 const storeProfile = useProfileStore();
 const storeQuiz = useQuizStore();
 const quizzesList = await readQuizzes(storeProfile.profile.id);
-const quizzes = quizzesList.filter((key) => key.user_id !== null);
+const quizzesFilteredList = quizzesList.filter((key) => key.user_id !== null);
+const quizzesFilteredIdList = new Set(quizzesFilteredList.map((item) => item.id));
 const quiz = storeQuiz.quiz;
+const answeredQuizzes = JSON.parse(localStorage.getItem("answered-quizzes"));
+
+const quizzes = Array.from(quizzesFilteredIdList)
+  .filter((item) => !answeredQuizzes.includes(item))
+  .concat(answeredQuizzes.filter((item) => !Array.from(quizzesFilteredIdList).includes(item)));
 
 const navigateToAnswerQuiz = async (id, number, type) => {
   const response = await readQuizItems(id);

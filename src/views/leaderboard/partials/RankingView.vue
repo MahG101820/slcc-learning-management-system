@@ -15,7 +15,7 @@
 
       <tbody class="flex-1 overflow-y-auto">
         <tr
-          v-for="(item, index) in leaderboardList"
+          v-for="(item, index) in leaderboardTableList"
           :key="index"
           :class="`${
             index % 2 === 0 ? 'bg-gray-300/50 text-gray-900' : 'bg-gray-200/50 text-gray-800'
@@ -60,14 +60,14 @@
         </div>
       </div>
 
-      <p class="mr-2 text-4xl font-bold">{{ leaderboardList.length }}</p>
+      <p class="mr-2 text-4xl font-bold">{{ leaderboardTableList.length }}</p>
     </div>
 
     <p class="text-xl font-bold uppercase">Top students on leaderboards</p>
 
     <div class="flex-1 grid gap-2">
       <div
-        v-for="(item, index) in leaderboard"
+        v-for="(item, index) in leaderboardTopList"
         :key="index"
         class="border-gray-300 bg-gray-100 text-gray-700 p-2 border rounded-lg flex flex-col gap-2"
       >
@@ -104,5 +104,6 @@ import { readLeaderboard } from "@/api/leaderboard";
 import LeaderboardIcon from "@/assets/icons/LeaderboardIcon.vue";
 
 const leaderboardList = await readLeaderboard();
-const leaderboard = leaderboardList.filter((key) => key.ranking <= 3);
+const leaderboardTableList = leaderboardList.filter((item) => item.name !== null);
+const leaderboardTopList = leaderboardTableList.filter((key) => key.ranking <= 3);
 </script>
