@@ -2,7 +2,7 @@
   <div class="border-gray-300 bg-gray-100 text-gray-700 w-6/12 p-4 border rounded-lg space-y-8">
     <div class="my-2 flex flex-col items-center gap-4">
       <img
-        src=""
+        :src="profile.image"
         alt="Profile picture"
         class="border-emerald-600 bg-gray-300 w-48 aspect-square border-4 rounded-full object-cover object-center"
       />
@@ -17,11 +17,7 @@
         <p
           class="border-gray-300 bg-gray-200 text-gray-800 flex-1 px-4 py-2 text-sm truncate border rounded-lg"
         >
-          {{
-            `${storedProfile.fname} ${storedProfile.mname ? storedProfile.mname : ``} ${
-              storedProfile.lname
-            }`
-          }}
+          {{ `${profile.fname} ${profile.mname ? profile.mname : ``} ${profile.lname}` }}
         </p>
 
         <IconedButton @click="showModal(`name`)" class="bg-sky-600 text-gray-100">
@@ -66,6 +62,7 @@
       <div class="space-y-4">
         <template v-if="modalProperties.target === `image`">
           <input
+            @change="handleImageUploading"
             type="file"
             id="image"
             class="hidden"
@@ -74,6 +71,7 @@
           />
 
           <img
+            :src="file ? file : profile.image"
             alt="Material image"
             class="bg-gray-200 w-full aspect-video rounded-lg object-cover object-center"
           />
@@ -88,7 +86,7 @@
 
         <template v-if="modalProperties.target === `name`">
           <InputText v-model.trim="name.first" id="first" label="First name" required />
-          <InputText v-model.trim="name.middle" id="middle" label="Middle initial" required />
+          <InputText v-model.trim="name.middle" id="middle" label="Middle initial" />
           <InputText v-model.trim="name.last" id="last" label="Last name" required />
         </template>
 
@@ -108,7 +106,10 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, watchEffect } from "vue";
+import { useProfileStore } from "@/stores/profile";
+import { uploadImage, downloadImage } from "@/firebase/storage";
+import { updateProfile } from "@/api/profile";
 
 import IconedButton from "@/components/IconedButton.vue";
 import PrimaryButton from "@/components/PrimaryButton.vue";
@@ -117,10 +118,13 @@ import InputText from "@/components/InputText.vue";
 import EditIcon from "@/assets/icons/EditIcon.vue";
 import CloseIcon from "@/assets/icons/CloseIcon.vue";
 
-const storedProfile = JSON.parse(localStorage.getItem("profile"));
-
+const profileStore = useProfileStore();
+const profile = profileStore.profile;
 const modal = ref(null);
 const modalProperties = reactive({});
+const loading = ref(false);
+const file = ref(null);
+const image = ref(null);
 const name = reactive({
   first: "",
   middle: "",
@@ -131,7 +135,20 @@ const password = reactive({
   second: ""
 });
 
+const reset = () => {
+  URL.revokeObjectURL(file.value);
+  file.value = null;
+  image.value = null;
+  name.first = "";
+  name.middle = "";
+  name.last = "";
+  password.first = "";
+  password.second = "";
+};
+
 const showModal = (target) => {
+  reset();
+
   modalProperties.target = target;
 
   if (target === "image") {
@@ -149,6 +166,94 @@ const showModal = (target) => {
 };
 
 const unshowModal = () => {
+  reset();
   modal.value.close();
+};
+
+const handleImageUploading = (event) => {
+  URL.revokeObjectURL(file.value);
+  file.value = null;
+  image.value = event.target.files[0];
+  file.value = URL.createObjectURL(image.value);
+};
+
+const fullName = `${profile.fname}${profile.mname || ""}${profile.lname}`;
+
+console.log(fullName.replace(/\s/g, "").toLowerCase());
+
+const submitForm = async () => {
+  const result = ref(null);
+
+  loading.value = true;
+
+  if (modalProperties.target === "image") {
+    const fullName = `${profile.fname}${profile.mname || ""}${profile.lname}`;
+
+    if (image.value) {
+      const response = await uploadImage(
+        image.value,
+        `users/${profile.type.charAt(0)}-${fullName}`
+      );
+
+      result.value = response;
+    } else {
+      loading.value = false;
+      result.value = null;
+      unshowModal();
+    }
+
+    watchEffect(async () => {
+      if (result.value === "success") {
+        const imageUrl = await downloadImage(`users/${profile.type.charAt(0)}-${fullName}`);
+
+        profile.image = imageUrl;
+        const response = await updateProfile("image", imageUrl);
+
+        if (response.statuc_code === 200) {
+          loading.value = false;
+          result.value = null;
+
+          alert("Successfully updated image!");
+
+          unshowModal();
+        }
+      }
+    });
+  } else if (modalProperties.target === "name") {
+    const response = await updateProfile("name", Object.values(name));
+
+    if (response.statuc_code === 200) {
+      profile.fname = name.first;
+      profile.mname = name.middle || null;
+      profile.lname = name.last;
+
+      loading.value = false;
+      result.value = null;
+
+      alert("Successfully updated name!");
+
+      unshowModal();
+    }
+  } else {
+    if (password.first !== password.second) {
+      loading.value = false;
+      result.value = null;
+
+      alert("Passwords do not match!");
+
+      unshowModal();
+    } else {
+      const response = await updateProfile("password", password.first);
+
+      if (response.statuc_code === 200) {
+        loading.value = false;
+        result.value = null;
+
+        alert("Password successfully changed");
+
+        unshowModal();
+      }
+    }
+  }
 };
 </script>

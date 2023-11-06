@@ -8,27 +8,30 @@ headers.append("Accept", "application/json");
 headers.append("Authorization", "Bearer 387|6q5RGtSmpPXZbjBjjtVeJyGND3soWHGWs8xFEBGD");
 
 const store = useProfileStore();
+const profile = store.profile;
 
 const updateProfile = async (key, value) => {
-  formData.append("id", store.profile.id);
+  formData.append("id", profile.id);
 
   if (key === "name") {
+    console.log(value);
+
     formData.append("fname", value[0]);
     formData.append("mname", value[1]);
     formData.append("lname", value[2]);
-    formData.append("image", store.profile.image);
+    formData.append("image", profile.image);
     formData.append("password", null);
   } else if (key === "image") {
-    formData.append("fname", store.profile.fname);
-    formData.append("mname", store.profile.mname);
-    formData.append("lname", store.profile.lname);
+    formData.append("fname", profile.fname);
+    formData.append("mname", profile.mname);
+    formData.append("lname", profile.lname);
     formData.append("image", value);
     formData.append("password", null);
   } else {
-    formData.append("fname", store.profile.fname);
-    formData.append("mname", store.profile.mname);
-    formData.append("lname", store.profile.lname);
-    formData.append("image", store.profile.image);
+    formData.append("fname", profile.fname);
+    formData.append("mname", profile.mname);
+    formData.append("lname", profile.lname);
+    formData.append("image", profile.image);
     formData.append("password", value);
   }
 
