@@ -177,10 +177,6 @@ const handleImageUploading = (event) => {
   file.value = URL.createObjectURL(image.value);
 };
 
-const fullName = `${profile.fname}${profile.mname || ""}${profile.lname}`;
-
-console.log(fullName.replace(/\s/g, "").toLowerCase());
-
 const submitForm = async () => {
   const result = ref(null);
 
