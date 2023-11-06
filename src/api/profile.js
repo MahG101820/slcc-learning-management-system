@@ -14,8 +14,6 @@ const updateProfile = async (key, value) => {
   formData.append("id", profile.id);
 
   if (key === "name") {
-    console.log(value);
-
     formData.append("fname", value[0]);
     formData.append("mname", value[1]);
     formData.append("lname", value[2]);
