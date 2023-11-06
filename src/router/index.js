@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { useProfileStore } from "@/stores/profile";
 
 import LoginView from "@/views/login/IndexView.vue";
 import ErrorView from "@/views/error/IndexView.vue";
@@ -86,21 +87,30 @@ const router = createRouter({
 });
 
 router.beforeEach((to, _, next) => {
-  const storedProfile = JSON.parse(localStorage.getItem("profile"));
+  const profileStore = useProfileStore();
+  const profile = profileStore.profile;
   const requiresAuthentication = to.meta.requiresAuthentication;
-  const isAdmin = storedProfile ? (storedProfile.type === "administrator" ? true : false) : false;
 
-  if (isAdmin && to.name !== "administrator") {
-    localStorage.clear();
-    window.location.reload();
-  }
-
-  if (requiresAuthentication && !storedProfile) {
-    next({ name: "login" });
-  } else if (to.name === "login" && storedProfile) {
-    next({ name: "dashboard" });
-  } else {
+  if (profile.token && profile.type === "administrator") {
+    if (requiresAuthentication || to.name === "login") {
+      profileStore.reset();
+    }
     next();
+  } else if (profile.token && profile.type !== "administrator") {
+    if (to.name === "login") {
+      next({ name: "dashboard" });
+    } else if (to.name === "administrator") {
+      profileStore.reset();
+      next();
+    } else {
+      next();
+    }
+  } else {
+    if (requiresAuthentication) {
+      next({ name: "login" });
+    } else {
+      next();
+    }
   }
 });
 
@@ -132,3 +142,4 @@ router.afterEach((to) => {
 });
 
 export default router;
+ 
