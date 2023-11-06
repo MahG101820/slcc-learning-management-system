@@ -13,7 +13,7 @@
       v-if="storedProfile.type === `teacher`"
       @click="showModal"
       type="button"
-      class="border-gray-300 bg-gray-100 text-gray-700 col-span-3 h-64 border rounded-lg grid place-items-center"
+      class="border-gray-300 bg-gray-100 text-gray-700 col-span-3 h-64 border rounded-lg grid place-items-center transition-all hover:border-emerald-600 hover:scale-95 hover:shadow-lg"
     >
       <p class="text-xl font-bold">Create new lesson</p>
     </button>
