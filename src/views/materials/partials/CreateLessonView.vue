@@ -1,7 +1,7 @@
 <template>
   <section class="h-full flex flex-col gap-4">
     <div class="flex items-center justify-between gap-2">
-      <PrimaryButton @click="navigateToReadLessonView">
+      <PrimaryButton @click="showModal(`cancel`)">
         <ChevronLeftIcon />
 
         <p>Create new lesson</p>

@@ -88,7 +88,7 @@
       </div>
     </div>
 
-    <p class="mr-2 text-4xl font-bold">{{ leaderboard }}</p>
+    <p class="mr-2 text-4xl font-bold">{{ leaderboard - 1 }}</p>
   </div>
 </template>
 
