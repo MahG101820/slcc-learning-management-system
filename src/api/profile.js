@@ -4,11 +4,11 @@ const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const headers = new Headers();
 const formData = new FormData();
 
-headers.append("Accept", "application/json");
-headers.append("Authorization", "Bearer 387|6q5RGtSmpPXZbjBjjtVeJyGND3soWHGWs8xFEBGD");
-
 const store = useProfileStore();
 const profile = store.profile;
+
+headers.append("Accept", "application/json");
+headers.append("Authorization", profile.token);
 
 const updateProfile = async (key, value) => {
   formData.append("id", profile.id);

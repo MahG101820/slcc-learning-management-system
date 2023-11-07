@@ -1,9 +1,14 @@
+import { useProfileStore } from "@/stores/profile";
+
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const headers = new Headers();
 const formData = new FormData();
 
+const store = useProfileStore();
+const profile = store.profile;
+
 headers.append("Accept", "application/json");
-headers.append("Authorization", "Bearer 387|6q5RGtSmpPXZbjBjjtVeJyGND3soWHGWs8xFEBGD");
+headers.append("Authorization", profile.token);
 
 const readQuizzes = async (id) => {
   try {
@@ -64,4 +69,19 @@ const updateQuizScore = async (id, quizId, score) => {
   }
 };
 
-export { readQuizzes, readQuizItems, updateQuizScore };
+const deleteQuizHeader = async (id) => {
+  try {
+    const url = new URL(`${baseUrl}/delete/quizzes_header/${id}`);
+
+    const response = await fetch(url, { headers: headers });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export { readQuizzes, readQuizItems, updateQuizScore, deleteQuizHeader };

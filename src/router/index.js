@@ -50,6 +50,12 @@ const router = createRouter({
       meta: { requiresAuthentication: true }
     },
     {
+      path: "/quizzes/create/:id",
+      name: "quizzes-create",
+      component: () => import("@/views/quizzes/partials/CreateQuizView.vue"),
+      meta: { requiresAuthentication: true }
+    },
+    {
       path: "/quizzes/answer/:id/:number",
       name: "quizzes-answer",
       component: () => import("@/views/quizzes/partials/AnswerQuizzesView.vue"),
