@@ -228,7 +228,7 @@ const submitForm = async () => {
         const response = await deleteMaterials("chapter", store.chapter.id);
 
         if (response === 200) {
-          alert(`Chapter ${store.chapter.id} successfully deleted!`);
+          alert(`Chapter ${store.chapter.number} successfully deleted!`);
         }
       }
 

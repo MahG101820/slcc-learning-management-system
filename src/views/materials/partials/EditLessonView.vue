@@ -1,18 +1,46 @@
 <template>
-  <section class="h-full space-y-4">
+  <section class="h-full flex flex-col gap-4">
     <div class="flex items-center justify-between gap-2">
       <PrimaryButton @click="navigateToReadLessonView">
         <ChevronLeftIcon />
 
-        <p>{{ `Lesson ${storeReading.reading.lesson.number}` }}</p>
+        <p>{{ `Lesson ${reading.lesson.number}` }}</p>
       </PrimaryButton>
 
-      <IconedButton @click="showModal" class="bg-sky-600 text-gray-100">
-        <EditIcon />
-      </IconedButton>
+      <div class="flex gap-2">
+        <NeutralButton @click="showModal(`cancel`)"> Cancel </NeutralButton>
+
+        <PrimaryButton @click="showModal(`save`)"> Save </PrimaryButton>
+      </div>
     </div>
 
-    <div></div>
+    <div class="border-gray-300 bg-gray-100 flex-1 p-4 border rounded-lg space-y-4">
+      <div class="flex items-center gap-4 justify-between">
+        <InputText
+          v-model.trim="reading.lesson.description"
+          id="title"
+          label="Title"
+          class="flex-1"
+        />
+
+        <PrimaryButton @click="showModal(`save`)"> Upload background image </PrimaryButton>
+      </div>
+
+      <div>
+        <QuillEditor
+          v-model:content="reading.lesson.content"
+          :toolbar="[
+            [{ header: 1 }, { header: 2 }],
+            [`bold`, `italic`, `underline`],
+            [{ indent: `+1` }, { indent: `-1` }],
+            [{ list: `ordered` }, { list: `bullet` }],
+            [`image`]
+          ]"
+          theme="snow"
+          contentType="html"
+        />
+      </div>
+    </div>
   </section>
 
   <dialog ref="modal" class="bg-transparent">
@@ -24,9 +52,7 @@
         <div>
           <p class="font-bold uppercase truncate">Edit lesson</p>
           <p class="text-xs">
-            {{
-              `Lesson ${storeReading.reading.lesson.number}: ${storeReading.reading.lesson.description}`
-            }}
+            {{ `Lesson ${reading.lesson.number}: ${reading.lesson.description}` }}
           </p>
         </div>
 
@@ -71,7 +97,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { useReadingStore } from "@/stores/reading";
 
@@ -80,12 +106,20 @@ import NeutralButton from "@/components/NeutralButton.vue";
 import IconedButton from "@/components/IconedButton.vue";
 import InputText from "@/components/InputText.vue";
 import ChevronLeftIcon from "@/assets/icons/ChevronLeftIcon.vue";
-import EditIcon from "@/assets/icons/EditIcon.vue";
 import CloseIcon from "@/assets/icons/CloseIcon.vue";
 
 const router = useRouter();
-const storeReading = useReadingStore();
+const readingStore = useReadingStore();
+const reading = readingStore.reading;
 const modal = ref();
+const lesson = reactive({
+  description: "",
+  content: "",
+  image: null
+});
+
+console.log(reading)
+console.log(lesson)
 
 const navigateToReadLessonView = () => {
   router.go(-1);

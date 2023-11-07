@@ -32,7 +32,13 @@ const router = createRouter({
       meta: { requiresAuthentication: true }
     },
     {
-      path: "/materials/lesson/edit/:id/",
+      path: "/materials/lesson/create/:id",
+      name: "materials-lesson-create",
+      component: () => import("@/views/materials/partials/CreateLessonView.vue"),
+      meta: { requiresAuthentication: true }
+    },
+    {
+      path: "/materials/lesson/edit/:id",
       name: "materials-lesson-edit",
       component: () => import("@/views/materials/partials/EditLessonView.vue"),
       meta: { requiresAuthentication: true }

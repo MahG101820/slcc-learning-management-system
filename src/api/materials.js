@@ -1,18 +1,31 @@
+import { useProfileStore } from "@/stores/profile";
+
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const headers = new Headers();
 const formData = new FormData();
+const profileStore = useProfileStore();
+const profile = profileStore.profile;
 
-// headers.append("Content-Type", "application/json");
 headers.append("Accept", "application/json");
-headers.append("Authorization", "Bearer 387|6q5RGtSmpPXZbjBjjtVeJyGND3soWHGWs8xFEBGD");
+headers.append("Authorization", profile.token);
 
 const createMaterials = async (material, form) => {
   try {
-    const { description, image } = form;
+    if (material === "chapter") {
+      const { description, image } = form;
 
-    formData.append("user_id", 1);
-    formData.append("description", description);
-    formData.append("image", image);
+      formData.append("user_id", profile.id);
+      formData.append("description", description);
+      formData.append("image", image);
+    } else {
+      const { chapter_id, description, image, content } = form;
+
+      formData.append("user_id", profile.id);
+      formData.append("chapter_id", chapter_id);
+      formData.append("description", description);
+      formData.append("image", image);
+      formData.append("content", content);
+    }
 
     const url = new URL(`${baseUrl}/insert-${material}`);
     const response = await fetch(url, { method: "POST", body: formData });
@@ -52,7 +65,7 @@ const updateMaterials = async (material, form) => {
   try {
     const { id, description, image } = form;
 
-    formData.append("user_id", 0);
+    formData.append("user_id", profile.id);
     formData.append("description", description);
     formData.append("image", image);
 

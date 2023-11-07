@@ -5,17 +5,30 @@ import {
   getDownloadURL,
   deleteObject
 } from "firebase/storage";
-import { app } from "@/firebase/configuration";
+import { main, backup } from "@/firebase/configuration";
 
-const storage = getStorage(app);
+const mainStorage = getStorage(main);
+const backupStorage = getStorage(backup);
 
-const createStorageRef = (pointer) => ref(storage, pointer);
+const createMainStorageRef = (pointer) => ref(mainStorage, pointer);
+const createBackupStorageRef = (pointer) => ref(backupStorage, pointer);
 
 const uploadImage = async (image, pointer) => {
   try {
-    const imageRef = createStorageRef(pointer);
-    const response = await uploadBytesResumable(imageRef, image);
-    return response.state;
+    const mainImageRef = createMainStorageRef(pointer);
+    const backupImageRef = createBackupStorageRef(pointer);
+
+    const mainUploadPromise = uploadBytesResumable(mainImageRef, image);
+    const backupUploadPromise = uploadBytesResumable(backupImageRef, image);
+
+    const [mainUploadResponse, backupUploadResponse] = await Promise.all([
+      mainUploadPromise,
+      backupUploadPromise
+    ]);
+
+    if (mainUploadResponse.state === "success" && backupUploadResponse.state === "success") {
+      return "success";
+    }
   } catch (error) {
     console.error(error.code);
     console.error(error.message);
@@ -24,8 +37,8 @@ const uploadImage = async (image, pointer) => {
 
 const downloadImage = async (pointer) => {
   try {
-    const imageRef = createStorageRef(pointer);
-    const response = await getDownloadURL(imageRef);
+    const mainImageRef = createMainStorageRef(pointer);
+    const response = await getDownloadURL(mainImageRef);
     return response;
   } catch (error) {
     console.error(error.code);
@@ -35,8 +48,11 @@ const downloadImage = async (pointer) => {
 
 const deleteImage = async (pointer) => {
   try {
-    const imageRef = createStorageRef(pointer);
-    await deleteObject(imageRef);
+    const mainImageRef = createMainStorageRef(pointer);
+    const backupImageRef = createBackupStorageRef(pointer);
+
+    await Promise.all([deleteObject(mainImageRef), deleteObject(backupImageRef)]);
+
     return "success";
   } catch (error) {
     if (error.code === "storage/object-not-found") {

@@ -78,9 +78,11 @@
 </template>
 
 <script setup>
-import { ref, toRefs } from "vue";
+import { ref, toRefs, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { useReadingStore } from "@/stores/reading";
+import { deleteMaterials } from "@/api/materials";
+import { deleteImage } from "@/firebase/storage";
 
 import PrimaryButton from "@/components/PrimaryButton.vue";
 import NeutralButton from "@/components/NeutralButton.vue";
@@ -93,6 +95,7 @@ import DeleteIcon from "@/assets/icons/DeleteIcon.vue";
 const router = useRouter();
 const modal = ref(null);
 const store = useReadingStore();
+const loading = ref(false);
 const { chapter, lesson } = toRefs(store.reading);
 
 const navigateToLessonsView = () => {
@@ -110,5 +113,31 @@ const showModal = () => {
 
 const unshowModal = () => {
   modal.value.close();
+};
+
+const submitForm = async () => {
+  const result = ref(null);
+
+  loading.value = true;
+
+  const response = await deleteImage(`lessons/lesson${lesson.value.number}`);
+  result.value = response;
+
+  watchEffect(async () => {
+    if (result.value === "success") {
+      const response = await deleteMaterials("lessons", lesson.value.id);
+
+      if (response === 200) {
+        alert(`Chapter ${lesson.value.number} successfully deleted!`);
+      }
+    }
+
+    loading.value = false;
+    result.value = null;
+
+    unshowModal();
+    store.reset();
+    router.push({ name: "materials" });
+  });
 };
 </script>

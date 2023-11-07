@@ -39,3 +39,21 @@
   margin-inline: auto;
   border-radius: 0.5rem;
 }
+
+.ql-editor {
+  max-width: 100%;
+  min-height: 50vh;
+  overflow-x: auto;
+}
+
+.ql-toolbar.ql-snow {
+  border: 1px solid rgb(168 162 158 / 1) !important;
+  border-radius: 0.5rem !important;
+}
+
+.ql-container.ql-snow {
+  margin-top: 0.5rem;
+  border: 1px solid rgb(168 162 158 / 1) !important;
+  border-radius: 0.5rem !important;
+  height: max-content !important;
+}
