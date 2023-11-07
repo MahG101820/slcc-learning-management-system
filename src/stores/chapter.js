@@ -16,7 +16,7 @@ export const useChapterStore = defineStore(
       chapter.id = 0;
       chapter.number = 0;
       chapter.description = "";
-      chapter.image = "";
+      chapter.image = null;
     };
 
     return { chapter, reset };

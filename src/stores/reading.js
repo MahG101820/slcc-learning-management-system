@@ -9,7 +9,8 @@ export const useReadingStore = defineStore(
       chapter: {
         id: 0,
         number: 0,
-        description: ""
+        description: "",
+        image: ""
       },
 
       lesson: {
@@ -25,7 +26,8 @@ export const useReadingStore = defineStore(
       reading.chapter = {
         id: 0,
         number: 0,
-        description: ""
+        description: "",
+        image: ""
       };
 
       reading.lesson = {

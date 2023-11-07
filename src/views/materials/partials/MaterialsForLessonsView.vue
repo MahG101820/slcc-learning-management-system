@@ -46,7 +46,8 @@ const navigateToReadLessonView = (lesson, index) => {
   store.reading.chapter = {
     id: chapter.id,
     number: chapter.number,
-    description: chapter.description
+    description: chapter.description,
+    image: chapter.image
   };
 
   store.reading.lesson = {

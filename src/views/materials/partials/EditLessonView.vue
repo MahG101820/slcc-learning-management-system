@@ -23,7 +23,21 @@
           class="flex-1"
         />
 
-        <PrimaryButton @click="showModal(`save`)"> Upload background image </PrimaryButton>
+        <input
+          @change="handleImageUploading"
+          type="file"
+          id="image"
+          class="hidden"
+          name="image"
+          accept="image/png, image/jpeg"
+        />
+
+        <label
+          for="image"
+          class="border-emerald-600 bg-emerald-600 text-gray-100 w-max px-4 py-2 border rounded-lg flex items-center gap-4 cursor-pointer"
+        >
+          Upload background image
+        </label>
       </div>
 
       <div>
@@ -118,8 +132,8 @@ const lesson = reactive({
   image: null
 });
 
-console.log(reading)
-console.log(lesson)
+console.log(reading);
+console.log(lesson);
 
 const navigateToReadLessonView = () => {
   router.go(-1);
