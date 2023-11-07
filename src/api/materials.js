@@ -63,13 +63,22 @@ const readMaterials = async (material) => {
 
 const updateMaterials = async (material, form) => {
   try {
-    const { id, description, image } = form;
+    if (material === "chapter") {
+      const { description, image } = form;
 
-    formData.append("user_id", profile.id);
-    formData.append("description", description);
-    formData.append("image", image);
+      formData.append("user_id", profile.id);
+      formData.append("description", description);
+      formData.append("image", image);
+    } else {
+      const { chapter_id, description, content, image } = form;
 
-    const url = new URL(`${baseUrl}/update-${material}/id=${id}`);
+      formData.append("chapter_id", chapter_id);
+      formData.append("description", description);
+      formData.append("content", content);
+      formData.append("image", image);
+    }
+
+    const url = new URL(`${baseUrl}/update-${material}/id=${form.id}`);
     const response = await fetch(url, { method: "POST", headers, body: formData });
 
     if (response.ok) {
@@ -78,6 +87,7 @@ const updateMaterials = async (material, form) => {
       }
 
       const data = await response.json();
+
       return data;
     }
   } catch (error) {

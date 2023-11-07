@@ -101,7 +101,7 @@
 import { ref, reactive, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { useReadingStore } from "@/stores/reading";
-import { createMaterials } from "@/api/materials";
+import { updateMaterials } from "@/api/materials";
 import { uploadImage, downloadImage } from "@/firebase/storage";
 
 import PrimaryButton from "@/components/PrimaryButton.vue";
@@ -122,6 +122,7 @@ const modalProperties = reactive({
 });
 const lesson = reactive({
   chapter_id: reading.chapter.id,
+  id: reading.lesson.id,
   description: reading.lesson.description,
   content: reading.lesson.content,
   image: reading.lesson.image
@@ -169,7 +170,7 @@ const submitForm = async () => {
   loading.value = true;
 
   if (lesson.image === reading.lesson.image) {
-    const response = await createMaterials("lesson", lesson);
+    const response = await updateMaterials("lesson", lesson);
 
     if (response.status_code === 200) {
       loading.value = false;
@@ -198,7 +199,7 @@ const submitForm = async () => {
 
         lesson.image = imageUrl;
 
-        const response = await createMaterials("lesson", lesson);
+        const response = await updateMaterials("lesson", lesson);
 
         if (response.status_code === 200) {
           result.value = null;
