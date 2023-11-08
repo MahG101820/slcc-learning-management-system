@@ -46,6 +46,10 @@ const updateQuizScore = async (id, quizId, score) => {
     formData.append("quiz_header_id", quizId);
     formData.append("scores", score);
 
+    console.log(id);
+    console.log(quizId);
+    console.log(score);
+
     const response = await fetch(url, {
       method: "POST",
       headers: headers,
@@ -53,6 +57,8 @@ const updateQuizScore = async (id, quizId, score) => {
     });
 
     const answeredQuizzes = JSON.parse(localStorage.getItem("answered-quizzes"));
+
+    console.log(answeredQuizzes);
 
     if (response.ok) {
       if (answeredQuizzes) {
@@ -62,6 +68,8 @@ const updateQuizScore = async (id, quizId, score) => {
       }
 
       const data = await response.json();
+
+      console.log(data);
       return data;
     }
   } catch (error) {

@@ -93,10 +93,15 @@ const selectedQuizHeader = reactive({
 });
 
 const quizzes = answeredQuizzes
-  ? quizzesList
-      .filter((item) => !answeredQuizzes.includes(item))
-      .concat(answeredQuizzes.filter((item) => quizzesList.includes(item)))
+  ? quizzesList.filter((item) => !answeredQuizzes.includes(item.id))
   : quizzesList;
+
+console.log(quizzesList);
+console.log(answeredQuizzes);
+console.log(quizzes);
+
+// create a function that will filter all the items in quizzesList if the id on each object is the same
+
 
 const showModal = async () => {
   modal.value.showModal();
@@ -134,7 +139,7 @@ const navigateToAnswerQuiz = async (id, number, type) => {
       textsList.push(
         item.options
           .filter((_, index) => index % 2 === 0)
-          .map((key) => key.split("text:")[1].trim())
+          .map((key) => key.includes("text:") && key.split("text:")[1].trim())
       );
     });
 
