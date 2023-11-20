@@ -38,16 +38,24 @@
       <div>
         <QuillEditor
           v-model:content="lesson.content"
-          :toolbar="[
-            [{ header: 1 }, { header: 2 }],
-            [`bold`, `italic`, `underline`],
-            [{ indent: `+1` }, { indent: `-1` }],
-            [{ list: `ordered` }, { list: `bullet` }],
-            [`image`]
-          ]"
           theme="snow"
           contentType="html"
-        />
+          toolbar="#my-toolbar"
+        >
+          <template #toolbar>
+            <div id="my-toolbar">
+              <button class="ql-header" value="1" />
+              <button class="ql-header" value="2" />
+              <button class="ql-bold" />
+              <button class="ql-italic" />
+              <button class="ql-underline" />
+              <button class="ql-list" value="ordered" />
+              <button class="ql-list" value="bullet" />
+              <button class="ql-image" />
+              <button class="ql-video" />
+            </div>
+          </template>
+        </QuillEditor>
       </div>
     </div>
   </section>

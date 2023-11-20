@@ -34,9 +34,12 @@
   }
 }
 
+#content :is(img, iframe) {
+  margin-inline: auto;
+}
+
 #content img {
   max-height: 500px;
-  margin-inline: auto;
   border-radius: 0.5rem;
 }
 

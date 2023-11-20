@@ -8,6 +8,8 @@
       </PrimaryButton>
 
       <div v-if="materialsForLessonsView" class="flex items-center gap-2">
+        <PrimaryButton> View all archived lessons </PrimaryButton>
+
         <IconedButton @click="showModal(`edit`)" class="bg-sky-600 text-gray-100">
           <EditIcon />
         </IconedButton>

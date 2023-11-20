@@ -1,7 +1,13 @@
 <template>
   <Suspense>
     <template #default>
-      <MaterialsForChaptersView />
+      <div class="grid gap-4">
+        <div class="flex justify-end">
+          <PrimaryButton> View all archived materials </PrimaryButton>
+        </div>
+
+        <MaterialsForChaptersView />
+      </div>
     </template>
 
     <template #fallback>
@@ -26,6 +32,7 @@
 import { ref, onErrorCaptured } from "vue";
 
 import MaterialsForChaptersView from "@/views/materials/partials/MaterialsForChaptersView.vue";
+import PrimaryButton from "@/components/PrimaryButton.vue";
 import ServerErrorIcon from "@/assets/img/ServerErrorIcon.png";
 
 const hasError = ref(false);
