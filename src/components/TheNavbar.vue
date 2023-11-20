@@ -33,7 +33,7 @@
           </li>
         </ul>
 
-        <PrimaryButton @click="logoutAccount"> Logout </PrimaryButton>
+        <PrimaryButton @click="logoutAccount"> Logouts </PrimaryButton>
       </div>
     </nav>
   </header>
