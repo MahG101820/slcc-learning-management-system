@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    class="border-gray-300 bg-gray-100 text-gray-700 col-span-3 h-64 border rounded-lg flex flex-col transition-all hover:border-emerald-600 hover:scale-95 hover:shadow-lg"
+    class="border-gray-300 bg-gray-100 text-gray-700 lg:col-span-3 h-64 border rounded-lg flex flex-col transition-all hover:border-emerald-600 hover:scale-95 hover:shadow-lg"
   >
     <img
       :src="imageSource"

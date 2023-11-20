@@ -1,5 +1,8 @@
 <template>
-  <section v-if="chapters.length" class="h-full grid grid-cols-12 gap-x-2 gap-y-8">
+  <section
+    v-if="chapters.length"
+    class="h-full grid sm:grid-cols-3 lg:grid-cols-12 gap-x-2 gap-y-8"
+  >
     <MaterialCard
       v-for="(item, index) in chapters"
       :key="index"
@@ -13,7 +16,7 @@
       v-if="storedProfile.type === `teacher`"
       @click="showModal"
       type="button"
-      class="border-gray-300 bg-gray-100 text-gray-700 col-span-3 h-64 text-xl font-bold border rounded-lg grid place-items-center transition-all hover:border-emerald-600 hover:scale-95 hover:shadow-lg"
+      class="border-gray-300 bg-gray-100 text-gray-700 lg:col-span-3 h-64 text-xl font-bold border rounded-lg grid place-items-center transition-all hover:border-emerald-600 hover:scale-95 hover:shadow-lg"
     >
       Create new chapter
     </button>

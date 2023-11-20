@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-12 gap-x-2 gap-y-8">
+  <div class="grid h-full grid sm:grid-cols-3 lg:grid-cols-12 gap-x-2 gap-y-8">
     <template v-if="lessonsList.length">
       <MaterialCard
         v-for="(item, index) in lessonsList"
@@ -15,7 +15,7 @@
       v-if="storedProfile.type === `teacher`"
       @click="navigateToCreateLessonView(lessonsList.length + 1)"
       type="button"
-      class="border-gray-300 bg-gray-100 text-gray-700 col-span-3 h-64 border rounded-lg grid place-items-center transition-all hover:border-emerald-600 hover:scale-95 hover:shadow-lg"
+      class="border-gray-300 bg-gray-100 text-gray-700 lg:col-span-3 h-64 border rounded-lg grid place-items-center transition-all hover:border-emerald-600 hover:scale-95 hover:shadow-lg"
     >
       <p class="text-xl font-bold">Create new lesson</p>
     </button>
