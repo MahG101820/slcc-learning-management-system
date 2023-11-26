@@ -1,6 +1,6 @@
 <template>
   <ZoomIn>
-    <main class="h-full bg-gray-300 grid place-items-center relative">
+    <main class="h-full grid place-items-center relative">
       <ZoomIn>
         <div
           v-if="!started && !finished"
@@ -16,7 +16,7 @@
       <ZoomIn>
         <div
           v-if="started && !finished"
-          class="border-gray-300 bg-gray-100 w-3/4 h-full p-4 border rounded-lg flex flex-col gap-2"
+          class="border-gray-300 bg-gray-100 w-full h-full p-4 border rounded-lg flex flex-col gap-2 md:w-3/4"
         >
           <div class="flex flex-col">
             <p>{{ `Question ${active} of ${details.questions.texts.length}` }}</p>
@@ -25,25 +25,25 @@
               <img
                 :src="details.questions.images[status.active - 1]"
                 alt=""
-                class="bg-gray-300 h-52 mx-auto aspect-video object-cover object-center rounded-lg"
+                class="bg-gray-300 w-full mx-auto aspect-video object-cover object-center rounded-lg md:h-52"
               />
 
               <p class="truncate text-center">{{ details.questions.texts[status.active - 1] }}</p>
             </div>
           </div>
 
-          <div class="flex-1 grid grid-flow-col grid-cols-12 gap-2">
+          <div class="flex-1 grid md:grid-flow-col md:grid-cols-12 gap-2">
             <button
               v-for="(_, index) in details.type === 0 ? 4 : details.type === 1 ? 2 : 0"
               :key="index"
               @click="selectAnswer(index)"
               type="button"
-              class="bg-emerald-600 text-gray-100 col-span-3 rounded-lg flex flex-col gap-2 transition-all hover:scale-90"
+              class="bg-emerald-600 text-gray-100 md:col-span-3 rounded-lg flex flex-col gap-2 transition-all hover:scale-90"
             >
               <img
                 :src="details.options.images[status.active - 1][index]"
                 alt=""
-                class="bg-gray-200 flex-1 aspect-video object-cover object-center rounded-lg"
+                class="bg-gray-200 w-full flex-1 aspect-video object-cover object-center rounded-lg"
               />
 
               <div class="w-full h-32 p-2 grid place-items-center">
