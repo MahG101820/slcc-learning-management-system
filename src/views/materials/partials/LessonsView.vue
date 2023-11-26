@@ -1,6 +1,6 @@
 <template>
   <section class="h-full space-y-4">
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+    <div class="flex justify-between md:items-center gap-2">
       <PrimaryButton @click="navigateToChaptersView">
         <ChevronLeftIcon />
 
@@ -8,7 +8,7 @@
       </PrimaryButton>
 
       <div v-if="materialsForLessonsView" class="flex items-center gap-2">
-        <PrimaryButton> View all archived lessons </PrimaryButton>
+        <!-- <PrimaryButton> View all archived lessons </PrimaryButton> -->
 
         <IconedButton @click="showModal(`edit`)" class="bg-sky-600 text-gray-100">
           <EditIcon />
@@ -38,7 +38,7 @@
   <dialog ref="modal" class="bg-transparent">
     <form
       @submit.prevent="submitForm"
-      class="border-gray-300 bg-gray-100 text-gray-700 min-w-[24rem] max-w-xl p-4 border rounded-lg flex flex-col gap-8"
+      class="border-gray-300 bg-gray-100 text-gray-700 lg:col-span-3 h-64 border rounded-lg flex flex-col transition-all hover:border-emerald-600 hover:scale-95 hover:shadow-lg"
     >
       <div class="flex items-start justify-between gap-4">
         <div>

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="border-gray-300 bg-gray-100 row-span-3 p-4 border rounded-lg flex flex-col items-center justify-center gap-4"
+    class="border-gray-300 bg-gray-100 md:row-span-full md:col-span-2 p-4 border rounded-lg flex flex-col items-center justify-center gap-4"
   >
     <div class="relative">
       <img
@@ -35,7 +35,7 @@
   </div>
 
   <div
-    class="border-gray-300 bg-gray-100 text-purple-600 p-4 border rounded-lg flex items-center justify-between"
+    class="border-gray-300 bg-gray-100 text-purple-600 col-span-full p-4 border rounded-lg flex items-center justify-between"
   >
     <div class="flex-1 flex items-center gap-2">
       <div
@@ -54,9 +54,9 @@
   </div>
 
   <div
-    class="border-gray-300 bg-gray-100 text-sky-600 p-4 border rounded-lg flex items-center justify-between"
+    class="border-gray-300 bg-gray-100 text-purple-600 col-span-full p-4 border rounded-lg flex items-center justify-between"
   >
-    <div class="flex-1 flex items-center gap-2">
+    <div class="flex-1 flex items-center gap-2 col-span-full">
       <div
         class="`border-sky-300 bg-sky-100 w-10 aspect-square border rounded grid place-items-center`"
       >
@@ -73,7 +73,7 @@
   </div>
 
   <div
-    class="border-gray-300 bg-gray-100 text-amber-600 p-4 border rounded-lg flex items-center justify-between"
+    class="border-gray-300 bg-gray-100 text-purple-600 col-span-full p-4 border rounded-lg flex items-center justify-between"
   >
     <div class="flex-1 flex items-center gap-2">
       <div

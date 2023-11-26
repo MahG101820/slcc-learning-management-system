@@ -2,9 +2,9 @@
   <Suspense>
     <template #default>
       <div class="grid gap-4">
-        <div class="flex justify-end">
+        <!-- <div class="hidden flex justify-end">
           <PrimaryButton> View all archived materials </PrimaryButton>
-        </div>
+        </div> -->
 
         <MaterialsForChaptersView />
       </div>
@@ -32,7 +32,7 @@
 import { ref, onErrorCaptured } from "vue";
 
 import MaterialsForChaptersView from "@/views/materials/partials/MaterialsForChaptersView.vue";
-import PrimaryButton from "@/components/PrimaryButton.vue";
+// import PrimaryButton from "@/components/PrimaryButton.vue";
 import ServerErrorIcon from "@/assets/img/ServerErrorIcon.png";
 
 const hasError = ref(false);

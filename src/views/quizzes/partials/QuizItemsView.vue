@@ -1,66 +1,74 @@
 <template>
-  <main class="h-full grid place-items-center">
-    <div
-      v-if="!started && !finished"
-      class="border-gray-300 bg-gray-100 w-8/12 h-4/6 border rounded-lg flex flex-col items-center justify-center"
-    >
-      <p class="text-3xl font-bold">{{ `Quiz ${route.params.id}` }}</p>
-      <p class="mb-8 font-medium">{{ details.title }}</p>
-
-      <PrimaryButton @click="startQuiz">Start Quiz</PrimaryButton>
-    </div>
-
-    <div
-      v-if="started && !finished"
-      class="border-gray-300 bg-gray-100 w-3/4 h-full p-4 border rounded-lg flex flex-col gap-2"
-    >
-      <div class="flex flex-col">
-        <p>{{ `Question ${active} of ${details.questions.texts.length}` }}</p>
-
-        <div class="flex-1 grid gap-2">
-          <img
-            :src="details.questions.images[status.active - 1]"
-            alt=""
-            class="bg-gray-300 h-52 mx-auto aspect-video object-cover object-center rounded-lg"
-          />
-
-          <p class="truncate text-center">{{ details.questions.texts[status.active - 1] }}</p>
-        </div>
-      </div>
-
-      <div class="flex-1 grid grid-flow-col grid-cols-12 gap-2">
-        <button
-          v-for="(_, index) in details.type === 0 ? 4 : details.type === 1 ? 2 : 0"
-          :key="index"
-          @click="selectAnswer(index)"
-          type="button"
-          class="bg-emerald-600 text-gray-100 col-span-3 rounded-lg flex flex-col gap-2"
+  <ZoomIn>
+    <main class="h-full bg-gray-300 grid place-items-center relative">
+      <ZoomIn>
+        <div
+          v-if="!started && !finished"
+          class="border-gray-300 bg-gray-100 w-8/12 h-4/6 border rounded-lg flex flex-col items-center justify-center absolute"
         >
-          <img
-            :src="details.options.images[status.active - 1][index]"
-            alt=""
-            class="bg-gray-200 flex-1 aspect-video object-cover object-center rounded-lg"
-          />
+          <p class="text-3xl font-bold">{{ `Quiz ${route.params.id}` }}</p>
+          <p class="mb-8 font-medium">{{ details.title }}</p>
 
-          <div class="w-full h-32 p-2 grid place-items-center">
-            <p class="max-h-full line-clamp-4">
-              {{ details.options.texts[status.active - 1][index] }}
-            </p>
+          <PrimaryButton @click="startQuiz">Start Quiz</PrimaryButton>
+        </div>
+      </ZoomIn>
+
+      <ZoomIn>
+        <div
+          v-if="started && !finished"
+          class="border-gray-300 bg-gray-100 w-3/4 h-full p-4 border rounded-lg flex flex-col gap-2"
+        >
+          <div class="flex flex-col">
+            <p>{{ `Question ${active} of ${details.questions.texts.length}` }}</p>
+
+            <div class="flex-1 grid gap-2">
+              <img
+                :src="details.questions.images[status.active - 1]"
+                alt=""
+                class="bg-gray-300 h-52 mx-auto aspect-video object-cover object-center rounded-lg"
+              />
+
+              <p class="truncate text-center">{{ details.questions.texts[status.active - 1] }}</p>
+            </div>
           </div>
-        </button>
-      </div>
-    </div>
 
-    <div
-      v-if="started && finished"
-      class="border-gray-300 bg-gray-100 w-8/12 h-4/6 border rounded-lg flex flex-col items-center justify-center"
-    >
-      <p class="text-3xl font-bold">{{ `Quiz ${route.params.id}` }}</p>
-      <p class="mb-8 font-medium">{{ details.title }}</p>
+          <div class="flex-1 grid grid-flow-col grid-cols-12 gap-2">
+            <button
+              v-for="(_, index) in details.type === 0 ? 4 : details.type === 1 ? 2 : 0"
+              :key="index"
+              @click="selectAnswer(index)"
+              type="button"
+              class="bg-emerald-600 text-gray-100 col-span-3 rounded-lg flex flex-col gap-2 transition-all hover:scale-90"
+            >
+              <img
+                :src="details.options.images[status.active - 1][index]"
+                alt=""
+                class="bg-gray-200 flex-1 aspect-video object-cover object-center rounded-lg"
+              />
 
-      <PrimaryButton @click="endQuiz">Done</PrimaryButton>
-    </div>
-  </main>
+              <div class="w-full h-32 p-2 grid place-items-center">
+                <p class="max-h-full line-clamp-4">
+                  {{ details.options.texts[status.active - 1][index] }}
+                </p>
+              </div>
+            </button>
+          </div>
+        </div>
+      </ZoomIn>
+
+      <ZoomIn>
+        <div
+          v-if="started && finished"
+          class="border-gray-300 bg-gray-100 w-8/12 h-4/6 border rounded-lg flex flex-col items-center justify-center absolute"
+        >
+          <p class="text-3xl font-bold">{{ `Quiz ${route.params.id}` }}</p>
+          <p class="mb-8 font-medium">{{ details.title }}</p>
+
+          <PrimaryButton @click="endQuiz">Done</PrimaryButton>
+        </div>
+      </ZoomIn>
+    </main>
+  </ZoomIn>
 </template>
 
 <script setup>
@@ -69,6 +77,7 @@ import { useRouter, useRoute } from "vue-router";
 import { updateQuizScore } from "@/api/quizzes";
 
 import PrimaryButton from "@/components/PrimaryButton.vue";
+import ZoomIn from "@/transitions/ZoomIn.vue";
 
 const router = useRouter();
 const route = useRoute();
