@@ -31,5 +31,5 @@
 import { readLeaderboard } from "@/api/leaderboard";
 
 const leaderboardList = await readLeaderboard();
-const leaderboard = leaderboardList.filter((key) => key.ranking <= 3);
+const leaderboard = leaderboardList.filter((_, index) => index <= 2);
 </script>
