@@ -1,5 +1,5 @@
 <template>
-  <div class="grid h-full grid sm:grid-cols-3 lg:grid-cols-12 gap-x-2 gap-y-8">
+  <div class="h-full grid sm:grid-cols-3 lg:grid-cols-12 gap-x-2 gap-y-8">
     <template v-if="lessonsList.length">
       <MaterialCard
         v-for="(item, index) in lessonsList"
