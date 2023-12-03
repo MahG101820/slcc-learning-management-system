@@ -105,5 +105,5 @@ import LeaderboardIcon from "@/assets/icons/LeaderboardIcon.vue";
 
 const leaderboardList = await readLeaderboard();
 const leaderboardTableList = leaderboardList.filter((item) => item.name !== null);
-const leaderboardTopList = leaderboardTableList.filter((key) => key.ranking <= 3);
+const leaderboardTopList = leaderboardTableList.filter((key) => key.ranking <= 2);
 </script>
