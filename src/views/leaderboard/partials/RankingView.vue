@@ -1,8 +1,8 @@
 <template>
   <div
-    class="border-gray-300 bg-gray-100 text-gray-700 col-span-8 border rounded-lg overflow-hidden"
+    class="border-gray-300 bg-gray-100 text-gray-700 h-max col-span-full lg:h-full lg:col-span-8 border rounded-lg overflow-hidden"
   >
-    <table class="h-full flex flex-col">
+    <table class="flex flex-col lg:h-full">
       <thead>
         <tr
           class="bg-emerald-600 text-gray-100 uppercase rounded-t-lg grid grid-flow-col grid-cols-12"
@@ -43,7 +43,7 @@
     </table>
   </div>
 
-  <div class="col-span-4 flex flex-col gap-4">
+  <div class="col-span-full lg:col-span-4 flex flex-col gap-4">
     <div
       class="border-gray-300 bg-gray-100 text-amber-600 p-4 border rounded-lg flex items-center justify-between"
     >
