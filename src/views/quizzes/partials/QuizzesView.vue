@@ -4,7 +4,7 @@
     :key="index"
     @click="navigateToAnswerQuiz(item.id, index + 1, item.quiz_type)"
     type="button"
-    class="border-stone-300 bg-stone-100 col-span-3 h-40 border rounded-lg transition-all hover:border-emerald-600 hover:scale-95 hover:shadow-lg"
+    class="border-stone-300 bg-stone-100 col-span-full md:col-span-3 h-40 border rounded-lg transition-all hover:border-emerald-600 hover:scale-95 hover:shadow-lg"
   >
     <div class="bg-emerald-600 text-stone-100 h-12 rounded-t-lg grid place-items-center">
       <p class="text-xl font-bold uppercase">{{ `Quiz ${index + 1}` }}</p>
@@ -33,7 +33,7 @@
     v-if="profile.type === `teacher`"
     @click="navigateToCreateQuizView"
     type="button"
-    class="border-stone-300 bg-stone-100 col-span-3 h-40 border rounded-lg transition-all hover:border-emerald-600 hover:scale-95 hover:shadow-lg"
+    class="border-stone-300 bg-stone-100 col-span-full md:col-span-3 h-40 border rounded-lg transition-all hover:border-emerald-600 hover:scale-95 hover:shadow-lg"
   >
     <p class="text-xl font-medium">Add new quiz</p>
   </button>
@@ -101,7 +101,6 @@ console.log(answeredQuizzes);
 console.log(quizzes);
 
 // create a function that will filter all the items in quizzesList if the id on each object is the same
-
 
 const showModal = async () => {
   modal.value.showModal();
