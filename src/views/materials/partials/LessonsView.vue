@@ -38,7 +38,7 @@
   <dialog ref="modal" class="bg-transparent">
     <form
       @submit.prevent="submitForm"
-      class="border-gray-300 bg-gray-100 text-gray-700 lg:col-span-3 h-64 border rounded-lg flex flex-col transition-all hover:border-emerald-600 hover:scale-95 hover:shadow-lg"
+      class="border-gray-300 bg-gray-100 text-gray-700 min-w-[24rem] max-w-xl p-4 border rounded-lg flex flex-col gap-8"
     >
       <div class="flex items-start justify-between gap-4">
         <div>
